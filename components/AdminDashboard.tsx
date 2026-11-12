@@ -287,9 +287,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
 
   if (!isAuthenticated) {
     return (
-      <div className="max-w-md mx-auto my-12 p-6 sm:p-8 bg-slate-900/90 rounded-3xl border border-slate-800 shadow-2xl text-slate-100">
-        <div className="text-center mb-6">
-          <div className="inline-flex p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 mb-3 shadow-inner">
+      <div className="max-w-md mx-auto my-4 sm:my-12 p-4 sm:p-8 bg-slate-900/95 rounded-3xl border border-slate-800 shadow-2xl text-slate-100">
+        <div className="text-center mb-5">
+          <div className="inline-flex p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 mb-2.5 shadow-inner">
             <Lock className="w-8 h-8" />
           </div>
           <h2 className="text-2xl font-black text-white">Panel de Profesora</h2>
