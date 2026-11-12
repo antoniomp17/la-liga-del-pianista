@@ -1,9 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getContestState } from "@/lib/storage";
 import { getStudentLeaderboardView } from "@/lib/ranking";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
 export async function GET(request: NextRequest) {
   try {
+    const ip = getClientIp(request.headers);
+
+    // Rate Limit: máximo 6 intentos por minuto por IP para evitar ataques de fuerza bruta
+    const rateCheck = checkRateLimit(ip, 6, 60000);
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        {
+          error: `Demasiados intentos fallidos. Por seguridad, espera ${rateCheck.resetInSeconds} segundos antes de volver a intentarlo.`,
+        },
+        { status: 429 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const pin = searchParams.get("pin");
     const id = searchParams.get("id");
@@ -11,7 +25,7 @@ export async function GET(request: NextRequest) {
     const query = pin || id;
     if (!query) {
       return NextResponse.json(
-        { error: "Debes proporcionar un PIN o identificador de alumno." },
+        { error: "Debes proporcionar tu PIN de 4 dígitos." },
         { status: 400 }
       );
     }
@@ -21,7 +35,7 @@ export async function GET(request: NextRequest) {
 
     if (!studentView) {
       return NextResponse.json(
-        { error: "No se ha encontrado ningún alumno con ese PIN." },
+        { error: "Código PIN incorrecto o no encontrado." },
         { status: 404 }
       );
     }

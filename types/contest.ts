@@ -62,7 +62,6 @@ export interface CurrentStudentDetails {
   id: string;
   name: string;
   avatar: string;
-  pin: string;
   rank: number;
   previousRank: number | null;
   rankChange: number;

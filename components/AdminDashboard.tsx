@@ -32,6 +32,7 @@ interface AdminDashboardProps {
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpenRules }) => {
   const [adminPin, setAdminPin] = useState("");
+  const [adminToken, setAdminToken] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -60,10 +61,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
   });
 
   useEffect(() => {
-    const savedPin = sessionStorage.getItem("admin_pin");
-    if (savedPin) {
-      setAdminPin(savedPin);
-      fetchAdminData(savedPin);
+    const savedToken = sessionStorage.getItem("admin_token");
+    if (savedToken) {
+      setAdminToken(savedToken);
+      fetchAdminData(savedToken);
     }
   }, []);
 
@@ -84,8 +85,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
         throw new Error(data.error || "PIN incorrecto");
       }
 
-      sessionStorage.setItem("admin_pin", adminPin.trim());
-      await fetchAdminData(adminPin.trim());
+      if (data.token) {
+        sessionStorage.setItem("admin_token", data.token);
+        setAdminToken(data.token);
+        await fetchAdminData(data.token);
+      }
     } catch (err: unknown) {
       const error = err as Error;
       setLoginError(error.message || "Error al autenticar");
@@ -94,12 +98,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
     }
   };
 
-  const fetchAdminData = async (pinToUse?: string) => {
-    const pin = pinToUse || adminPin;
+  const fetchAdminData = async (tokenToUse?: string) => {
+    const token = tokenToUse || adminToken;
     setIsLoading(true);
     try {
       const res = await fetch("/api/admin/data", {
-        headers: { "x-admin-pin": pin },
+        headers: { "x-admin-token": token },
       });
       const resData = await res.json();
       if (res.ok && resData.success) {
@@ -148,7 +152,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-pin": adminPin,
+          "x-admin-token": adminToken,
         },
         body: JSON.stringify({
           weekNumber: selectedWeek,
@@ -159,7 +163,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
       if (!res.ok) throw new Error(data.error);
 
       setSaveSuccessMessage(`¡Puntuaciones de la Semana ${selectedWeek} guardadas con éxito!`);
-      await fetchAdminData(adminPin);
+      await fetchAdminData(adminToken);
       setTimeout(() => setSaveSuccessMessage(""), 4000);
     } catch (err: unknown) {
       const error = err as Error;
@@ -177,13 +181,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
     try {
       const res = await fetch("/api/admin/publish", {
         method: "POST",
-        headers: { "x-admin-pin": adminPin },
+        headers: { "x-admin-token": adminToken },
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
 
       alert(`🎉 ${data.message}\nSubieron: ${data.summary.climbersCount} alumnos\nBajaron: ${data.summary.droppersCount} alumnos\nSe mantuvieron: ${data.summary.steadyCount}`);
-      await fetchAdminData(adminPin);
+      await fetchAdminData(adminToken);
     } catch (err: unknown) {
       const error = err as Error;
       alert("Error: " + error.message);
@@ -204,7 +208,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-pin": adminPin,
+          "x-admin-token": adminToken,
         },
         body: JSON.stringify(newStudent),
       });
@@ -213,7 +217,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
 
       setNewStudent({ name: "", pin: "", avatar: "🎹", phone: "", level: "Intermedio" });
       alert("Alumno añadido correctamente");
-      await fetchAdminData(adminPin);
+      await fetchAdminData(adminToken);
     } catch (err: unknown) {
       const error = err as Error;
       alert(error.message);
@@ -230,10 +234,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
     try {
       const res = await fetch(`/api/admin/students?id=${id}`, {
         method: "DELETE",
-        headers: { "x-admin-pin": adminPin },
+        headers: { "x-admin-token": adminToken },
       });
       if (!res.ok) throw new Error("Error al eliminar alumno");
-      await fetchAdminData(adminPin);
+      await fetchAdminData(adminToken);
     } catch (err: unknown) {
       const error = err as Error;
       alert(error.message);
@@ -274,9 +278,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
   };
 
   const handleLogoutAdmin = () => {
-    sessionStorage.removeItem("admin_pin");
+    sessionStorage.removeItem("admin_token");
     setIsAuthenticated(false);
     setAdminPin("");
+    setAdminToken("");
     onLogout();
   };
 
@@ -302,13 +307,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
               type="password"
               value={adminPin}
               onChange={(e) => setAdminPin(e.target.value)}
-              placeholder="Introduce PIN (Ej: piano1234)"
-              autoFocus
+              placeholder="Introduce tu PIN maestro"
               className="w-full text-center text-xl font-mono tracking-wider py-3 px-4 bg-slate-950 rounded-xl border border-slate-700 text-indigo-300 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            <p className="text-[11px] text-slate-500 text-center mt-1">
-              PIN maestro por defecto: <code className="text-amber-400">piano1234</code>
-            </p>
           </div>
 
           {loginError && (
@@ -924,12 +925,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
-                      "x-admin-pin": adminPin,
+                      "x-admin-token": adminToken,
                     },
                     body: JSON.stringify(settings),
                   });
                   alert("Configuración guardada correctamente");
-                  fetchAdminData(adminPin);
+                  fetchAdminData(adminToken);
                 }}
                 className="py-2.5 px-5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs"
               >
@@ -944,12 +945,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
                       method: "POST",
                       headers: {
                         "Content-Type": "application/json",
-                        "x-admin-pin": adminPin,
+                        "x-admin-token": adminToken,
                       },
                       body: JSON.stringify({ reset: true }),
                     });
                     alert("Datos oficiales restaurados");
-                    fetchAdminData(adminPin);
+                    fetchAdminData(adminToken);
                   }
                 }}
                 className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-rose-950/50 text-slate-400 hover:text-rose-300 text-xs flex items-center gap-1.5"

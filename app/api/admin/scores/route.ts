@@ -1,21 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getContestState, saveContestState } from "@/lib/storage";
+import { verifyAdminToken, secureCompare } from "@/lib/security";
 
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get("x-admin-pin");
+    const authHeader = request.headers.get("x-admin-token") || request.headers.get("x-admin-pin");
     const state = await getContestState();
 
-    if (!authHeader || authHeader !== state.settings.adminPin) {
-      return NextResponse.json(
-        { error: "No autorizado." },
-        { status: 401 }
-      );
+    const isAuthorized =
+      verifyAdminToken(authHeader) ||
+      (authHeader ? secureCompare(authHeader, state.settings.adminPin) : false);
+
+    if (!isAuthorized) {
+      return NextResponse.json({ error: "No autorizado." }, { status: 401 });
     }
 
     const body = await request.json();
     const { weekNumber, scores } = body;
-    // scores is an object: { [studentId: string]: { [testId: string]: number } }
 
     if (!weekNumber || typeof scores !== "object") {
       return NextResponse.json(
@@ -26,7 +27,6 @@ export async function POST(request: NextRequest) {
 
     const week = Number(weekNumber);
 
-    // Actualizar las puntuaciones en el estado
     for (const student of state.students) {
       if (scores[student.id]) {
         if (!student.scoresByWeek) {
@@ -39,7 +39,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Si la semana guardada es superior a la actual, podemos actualizar el currentWeek
     if (week > state.settings.currentWeek) {
       state.settings.currentWeek = week;
     }

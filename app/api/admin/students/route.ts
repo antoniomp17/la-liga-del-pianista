@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getContestState, saveContestState } from "@/lib/storage";
 import { Student } from "@/types/contest";
+import { verifyAdminToken, secureCompare } from "@/lib/security";
 
-// Helper para validar PIN admin
 async function validateAdmin(request: NextRequest) {
-  const authHeader = request.headers.get("x-admin-pin");
+  const authHeader = request.headers.get("x-admin-token") || request.headers.get("x-admin-pin");
   const state = await getContestState();
-  if (!authHeader || authHeader !== state.settings.adminPin) {
+  const isAuthorized =
+    verifyAdminToken(authHeader) ||
+    (authHeader ? secureCompare(authHeader, state.settings.adminPin) : false);
+
+  if (!isAuthorized) {
     return null;
   }
   return state;
@@ -20,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { name, pin, avatar, phone } = body;
+    const { name, pin, avatar, phone, level } = body;
 
     if (!name || !pin) {
       return NextResponse.json(
@@ -29,7 +33,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Comprobar PIN duplicado
     const pinExists = state.students.some((s) => s.pin === pin.trim());
     if (pinExists) {
       return NextResponse.json(
@@ -46,6 +49,7 @@ export async function POST(request: NextRequest) {
       pin: pin.trim(),
       avatar: avatar?.trim() || "🎹",
       phone: phone?.trim() || "",
+      level: level || "Intermedio",
       scoresByWeek: {},
     };
 
@@ -71,14 +75,13 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { id, name, pin, avatar, phone } = body;
+    const { id, name, pin, avatar, phone, level } = body;
 
     const studentIndex = state.students.findIndex((s) => s.id === id);
     if (studentIndex === -1) {
       return NextResponse.json({ error: "Alumno no encontrado." }, { status: 404 });
     }
 
-    // Validar PIN si ha cambiado
     if (pin && pin !== state.students[studentIndex].pin) {
       const pinExists = state.students.some((s) => s.id !== id && s.pin === pin.trim());
       if (pinExists) {
@@ -95,6 +98,7 @@ export async function PUT(request: NextRequest) {
       pin: pin?.trim() || state.students[studentIndex].pin,
       avatar: avatar?.trim() || state.students[studentIndex].avatar,
       phone: phone !== undefined ? phone.trim() : state.students[studentIndex].phone,
+      level: level || state.students[studentIndex].level,
     };
 
     await saveContestState(state);

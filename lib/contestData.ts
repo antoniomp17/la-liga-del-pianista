@@ -272,9 +272,16 @@ const STUDENT_NAMES = [
 
 const AVATARS = ["🎹", "🎼", "🌟", "🎵", "🎶", "🎻", "✨", "🔥", "🌸", "🎺", "⚡", "💫", "🎀", "🎯", "🥇", "🎨", "🚀", "💎", "🏆", "🎸", "🥁", "🪕", "🪄", "🌈", "🍀", "🌺", "🪐", "👑"];
 
+// Lista de PINs únicos e impredecibles para los 28 alumnos (no correlativos para evitar adivinación)
+const STUDENT_PINS = [
+  "7429", "3185", "9042", "6518", "2834", "8190", "4721", "5368", "1947", "8603",
+  "3452", "6781", "2194", "5038", "9821", "4163", "7509", "1384", "8927", "6241",
+  "3970", "5814", "9432", "2765", "8051", "4693", "1528", "7346",
+];
+
 export function generateInitial28Students(): Student[] {
   return STUDENT_NAMES.map((fullName, index) => {
-    const pin = (1001 + index).toString();
+    const pin = STUDENT_PINS[index] || (1001 + index).toString();
     const id = fullName.toLowerCase().replace(/[^a-z0-9]/g, "-");
     const avatar = AVATARS[index % AVATARS.length];
     const level: Student["level"] = index < 8 ? "Avanzado" : index < 18 ? "Intermedio" : "Iniciación";

@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getContestState, resetContestState, saveContestState } from "@/lib/storage";
+import { verifyAdminToken, secureCompare } from "@/lib/security";
 
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get("x-admin-pin");
+    const authHeader = request.headers.get("x-admin-token") || request.headers.get("x-admin-pin");
     const state = await getContestState();
 
-    if (!authHeader || authHeader !== state.settings.adminPin) {
+    const isAuthorized =
+      verifyAdminToken(authHeader) ||
+      (authHeader ? secureCompare(authHeader, state.settings.adminPin) : false);
+
+    if (!isAuthorized) {
       return NextResponse.json({ error: "No autorizado." }, { status: 401 });
     }
 
@@ -17,7 +22,7 @@ export async function POST(request: NextRequest) {
       const fresh = await resetContestState();
       return NextResponse.json({
         success: true,
-        message: "Datos restaurados al estado inicial de ejemplo.",
+        message: "Datos restaurados al estado oficial.",
         settings: fresh.settings,
       });
     }

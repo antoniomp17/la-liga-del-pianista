@@ -196,7 +196,6 @@ export function getStudentLeaderboardView(
     id: matched.id,
     name: matched.name,
     avatar: matched.avatar,
-    pin: matched.pin,
     rank: matched.rank,
     previousRank: matched.previousRank,
     rankChange: matched.rankChange,

@@ -1,15 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getContestState } from "@/lib/storage";
 import { calculateRanking } from "@/lib/ranking";
+import { verifyAdminToken, secureCompare } from "@/lib/security";
 
 export async function GET(request: NextRequest) {
   try {
-    const authHeader = request.headers.get("x-admin-pin");
+    const authHeader = request.headers.get("x-admin-token") || request.headers.get("x-admin-pin");
     const state = await getContestState();
 
-    if (!authHeader || authHeader !== state.settings.adminPin) {
+    const isTokenValid = verifyAdminToken(authHeader);
+    const isPinValid = authHeader ? secureCompare(authHeader, state.settings.adminPin) : false;
+
+    if (!isTokenValid && !isPinValid) {
       return NextResponse.json(
-        { error: "No autorizado. PIN de administradora inválido." },
+        { error: "No autorizado. Sesión de profesora inválida o expirada." },
         { status: 401 }
       );
     }
