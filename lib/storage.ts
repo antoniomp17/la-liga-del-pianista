@@ -3,7 +3,9 @@ import { OFFICIAL_TESTS, generateInitial28Students } from "@/lib/contestData";
 import fs from "fs/promises";
 import path from "path";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+// En Vercel / serverless el directorio de trabajo es de solo lectura, por lo que usamos /tmp
+const isVercel = !!process.env.VERCEL;
+const DATA_DIR = isVercel ? "/tmp" : path.join(process.cwd(), "data");
 const DATA_FILE = path.join(DATA_DIR, "concurso.json");
 
 const INITIAL_STATE: ContestState = {
@@ -25,21 +27,30 @@ export async function getContestState(): Promise<ContestState> {
   if (memoryState) return memoryState;
 
   try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
     const content = await fs.readFile(DATA_FILE, "utf-8");
     memoryState = JSON.parse(content) as ContestState;
     return memoryState;
   } catch {
-    await saveContestState(INITIAL_STATE);
+    // Si no se puede leer el archivo, inicializar con el estado oficial en memoria y guardar si es posible
     memoryState = JSON.parse(JSON.stringify(INITIAL_STATE));
+    try {
+      await fs.mkdir(DATA_DIR, { recursive: true });
+      await fs.writeFile(DATA_FILE, JSON.stringify(memoryState, null, 2), "utf-8");
+    } catch {
+      // Ignorar error si el sistema de archivos es estrictamente de solo lectura
+    }
     return memoryState as ContestState;
   }
 }
 
 export async function saveContestState(state: ContestState): Promise<void> {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  await fs.writeFile(DATA_FILE, JSON.stringify(state, null, 2), "utf-8");
   memoryState = state;
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    await fs.writeFile(DATA_FILE, JSON.stringify(state, null, 2), "utf-8");
+  } catch (err) {
+    console.warn("No se pudo escribir en disco, guardado en memoria:", err);
+  }
 }
 
 export async function resetContestState(): Promise<ContestState> {

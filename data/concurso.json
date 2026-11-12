@@ -1,0 +1,812 @@
+{
+  "settings": {
+    "title": "LA LIGA INDIVIDUAL DEL PIANISTA",
+    "subtitle": "Bases Oficiales y Calendario Anual de Competición • 28 Alumnos",
+    "adminPin": "piano1234",
+    "currentWeek": 3,
+    "totalWeeks": 27,
+    "isResultsPublished": true,
+    "tests": [
+      {
+        "id": "obras",
+        "name": "Práctica de Obras (Factor ×2)",
+        "shortName": "Obras (×2)",
+        "badge": "Motor Principal",
+        "description": "2 PTS / semana estimada al terminar una obra. Ventaja si terminas antes.",
+        "rules": "Cada alumno lleva 2 obras simultáneas. Al terminarla, otorga el doble de puntos de las semanas estimadas (ej: obra de 3 semanas = 6 pts; 4 semanas = 8 pts). Las ausencias siguen contando en la obra.",
+        "maxWeeklyScore": 16,
+        "activeWeeks": "all"
+      },
+      {
+        "id": "tecnica",
+        "name": "Técnica Semanal Fija",
+        "shortName": "Técnica Fija",
+        "badge": "Todas las semanas",
+        "description": "2 ejercicios pequeños de técnica adaptados a nivel. 1 PT por ejercicio (Máx 2 PTS/sem).",
+        "rules": "Máximo de 4 oportunidades en clase para pasar cada ejercicio a la velocidad y limpieza requeridas. 1 punto por ejercicio superado.",
+        "maxWeeklyScore": 2,
+        "activeWeeks": "all"
+      },
+      {
+        "id": "ritmo",
+        "name": "Reto: Lectura Musical y Ritmo",
+        "shortName": "Reto Ritmo",
+        "badge": "Semanas Impares",
+        "description": "4 ejercicios rítmicos al azar con cambio de clave. 1 PT por ejercicio (Máx 4 PTS/sem).",
+        "rules": "Ejercicios al azar de las últimas 10 páginas con cambio de clave en el medio. Cuenta con 1 comodín semanal para repetir un ejercicio fallado.",
+        "maxWeeklyScore": 4,
+        "isRotary": true,
+        "activeWeeks": "odd"
+      },
+      {
+        "id": "notas",
+        "name": "Reto: Lectura de Notas y Claves",
+        "shortName": "Reto Claves",
+        "badge": "Semanas Pares",
+        "description": "4 líneas alternando claves con tiempo límite por nivel. 0,5 pts/línea (Máx 2 PTS/sem).",
+        "rules": "Tiempo máximo según nivel: Iniciación (20s), Intermedio (15s), Avanzado (10s). Cuenta con 1 comodín semanal para repetir una línea fallada o fuera de tiempo.",
+        "maxWeeklyScore": 2,
+        "isRotary": true,
+        "activeWeeks": "even"
+      }
+    ]
+  },
+  "students": [
+    {
+      "id": "clara-schumann",
+      "name": "Clara Schumann",
+      "pin": "7429",
+      "avatar": "🎹",
+      "level": "Avanzado",
+      "scoresByWeek": {
+        "1": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 4,
+          "notas": 0
+        },
+        "2": {
+          "obras": 8,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 2
+        },
+        "3": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 4,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "mateo-bach",
+      "name": "Mateo Bach",
+      "pin": "3185",
+      "avatar": "🎼",
+      "level": "Avanzado",
+      "scoresByWeek": {
+        "1": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 4,
+          "notas": 0
+        },
+        "2": {
+          "obras": 8,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 2
+        },
+        "3": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 4,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "sof-a-mozart",
+      "name": "Sofía Mozart",
+      "pin": "9042",
+      "avatar": "🌟",
+      "level": "Avanzado",
+      "scoresByWeek": {
+        "1": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 4,
+          "notas": 0
+        },
+        "2": {
+          "obras": 8,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 2
+        },
+        "3": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 4,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "lucas-chopin",
+      "name": "Lucas Chopin",
+      "pin": "6518",
+      "avatar": "🎵",
+      "level": "Avanzado",
+      "scoresByWeek": {
+        "1": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 4,
+          "notas": 0
+        },
+        "2": {
+          "obras": 8,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 2
+        },
+        "3": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 4,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "elena-beethoven",
+      "name": "Elena Beethoven",
+      "pin": "2834",
+      "avatar": "🎶",
+      "level": "Avanzado",
+      "scoresByWeek": {
+        "1": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        },
+        "2": {
+          "obras": 8,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 1.5
+        },
+        "3": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "daniel-debussy",
+      "name": "Daniel Debussy",
+      "pin": "8190",
+      "avatar": "🎻",
+      "level": "Avanzado",
+      "scoresByWeek": {
+        "1": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        },
+        "2": {
+          "obras": 8,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 1.5
+        },
+        "3": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "valeria-ravel",
+      "name": "Valeria Ravel",
+      "pin": "4721",
+      "avatar": "✨",
+      "level": "Avanzado",
+      "scoresByWeek": {
+        "1": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        },
+        "2": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 1.5
+        },
+        "3": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "hugo-liszt",
+      "name": "Hugo Liszt",
+      "pin": "5368",
+      "avatar": "🔥",
+      "level": "Avanzado",
+      "scoresByWeek": {
+        "1": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        },
+        "2": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 1.5
+        },
+        "3": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "carmen-alb-niz",
+      "name": "Carmen Albéniz",
+      "pin": "1947",
+      "avatar": "🌸",
+      "level": "Intermedio",
+      "scoresByWeek": {
+        "1": {
+          "obras": 4,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        },
+        "2": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 1.5
+        },
+        "3": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "alejandro-granados",
+      "name": "Alejandro Granados",
+      "pin": "8603",
+      "avatar": "🎺",
+      "level": "Intermedio",
+      "scoresByWeek": {
+        "1": {
+          "obras": 4,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        },
+        "2": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 1.5
+        },
+        "3": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "mart-n-satie",
+      "name": "Martín Satie",
+      "pin": "3452",
+      "avatar": "⚡",
+      "level": "Intermedio",
+      "scoresByWeek": {
+        "1": {
+          "obras": 4,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        },
+        "2": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 1.5
+        },
+        "3": {
+          "obras": 4,
+          "tecnica": 2,
+          "ritmo": 3,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "paula-falla",
+      "name": "Paula Falla",
+      "pin": "6781",
+      "avatar": "💫",
+      "level": "Intermedio",
+      "scoresByWeek": {
+        "1": {
+          "obras": 4,
+          "tecnica": 2,
+          "ritmo": 2,
+          "notas": 0
+        },
+        "2": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 1
+        },
+        "3": {
+          "obras": 4,
+          "tecnica": 2,
+          "ritmo": 2,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "marcos-brahms",
+      "name": "Marcos Brahms",
+      "pin": "2194",
+      "avatar": "🎀",
+      "level": "Intermedio",
+      "scoresByWeek": {
+        "1": {
+          "obras": 4,
+          "tecnica": 2,
+          "ritmo": 2,
+          "notas": 0
+        },
+        "2": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 1
+        },
+        "3": {
+          "obras": 4,
+          "tecnica": 2,
+          "ritmo": 2,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "luc-a-tchaikovsky",
+      "name": "Lucía Tchaikovsky",
+      "pin": "5038",
+      "avatar": "🎯",
+      "level": "Intermedio",
+      "scoresByWeek": {
+        "1": {
+          "obras": 4,
+          "tecnica": 1,
+          "ritmo": 2,
+          "notas": 0
+        },
+        "2": {
+          "obras": 6,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 1
+        },
+        "3": {
+          "obras": 4,
+          "tecnica": 2,
+          "ritmo": 2,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "adri-n-haydn",
+      "name": "Adrián Haydn",
+      "pin": "9821",
+      "avatar": "🥇",
+      "level": "Intermedio",
+      "scoresByWeek": {
+        "1": {
+          "obras": 4,
+          "tecnica": 1,
+          "ritmo": 2,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 1
+        },
+        "3": {
+          "obras": 4,
+          "tecnica": 1,
+          "ritmo": 2,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "sara-schubert",
+      "name": "Sara Schubert",
+      "pin": "4163",
+      "avatar": "🎨",
+      "level": "Intermedio",
+      "scoresByWeek": {
+        "1": {
+          "obras": 4,
+          "tecnica": 1,
+          "ritmo": 2,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 2,
+          "ritmo": 0,
+          "notas": 1
+        },
+        "3": {
+          "obras": 4,
+          "tecnica": 1,
+          "ritmo": 2,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "pablo-rachmaninoff",
+      "name": "Pablo Rachmaninoff",
+      "pin": "7509",
+      "avatar": "🚀",
+      "level": "Intermedio",
+      "scoresByWeek": {
+        "1": {
+          "obras": 4,
+          "tecnica": 1,
+          "ritmo": 2,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 0,
+          "notas": 1
+        },
+        "3": {
+          "obras": 4,
+          "tecnica": 1,
+          "ritmo": 2,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "noa-mendelssohn",
+      "name": "Noa Mendelssohn",
+      "pin": "1384",
+      "avatar": "💎",
+      "level": "Intermedio",
+      "scoresByWeek": {
+        "1": {
+          "obras": 4,
+          "tecnica": 1,
+          "ritmo": 2,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 0,
+          "notas": 1
+        },
+        "3": {
+          "obras": 4,
+          "tecnica": 1,
+          "ritmo": 2,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "javier-prokofiev",
+      "name": "Javier Prokofiev",
+      "pin": "8927",
+      "avatar": "🏆",
+      "level": "Iniciación",
+      "scoresByWeek": {
+        "1": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 0,
+          "notas": 0.5
+        },
+        "3": {
+          "obras": 4,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "emma-vivaldi",
+      "name": "Emma Vivaldi",
+      "pin": "6241",
+      "avatar": "🎸",
+      "level": "Iniciación",
+      "scoresByWeek": {
+        "1": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 0,
+          "notas": 0.5
+        },
+        "3": {
+          "obras": 4,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "iker-scarlatti",
+      "name": "Iker Scarlatti",
+      "pin": "3970",
+      "avatar": "🥁",
+      "level": "Iniciación",
+      "scoresByWeek": {
+        "1": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 0,
+          "notas": 0.5
+        },
+        "3": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "alba-bart-k",
+      "name": "Alba Bartók",
+      "pin": "5814",
+      "avatar": "🪕",
+      "level": "Iniciación",
+      "scoresByWeek": {
+        "1": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 0,
+          "notas": 0.5
+        },
+        "3": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "david-handel",
+      "name": "David Handel",
+      "pin": "9432",
+      "avatar": "🪄",
+      "level": "Iniciación",
+      "scoresByWeek": {
+        "1": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 0,
+          "notas": 0.5
+        },
+        "3": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "carla-grieg",
+      "name": "Carla Grieg",
+      "pin": "2765",
+      "avatar": "🌈",
+      "level": "Iniciación",
+      "scoresByWeek": {
+        "1": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 0,
+          "notas": 0.5
+        },
+        "3": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "-lvaro-saint-sa-ns",
+      "name": "Álvaro Saint-Saëns",
+      "pin": "8051",
+      "avatar": "🍀",
+      "level": "Iniciación",
+      "scoresByWeek": {
+        "1": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 0,
+          "notas": 0.5
+        },
+        "3": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "irene-sibelius",
+      "name": "Irene Sibelius",
+      "pin": "4693",
+      "avatar": "🌺",
+      "level": "Iniciación",
+      "scoresByWeek": {
+        "1": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 0,
+          "notas": 0.5
+        },
+        "3": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "gonzalo-puccini",
+      "name": "Gonzalo Puccini",
+      "pin": "1528",
+      "avatar": "🪐",
+      "level": "Iniciación",
+      "scoresByWeek": {
+        "1": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 0,
+          "notas": 0.5
+        },
+        "3": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        }
+      }
+    },
+    {
+      "id": "nerea-bizet",
+      "name": "Nerea Bizet",
+      "pin": "7346",
+      "avatar": "👑",
+      "level": "Iniciación",
+      "scoresByWeek": {
+        "1": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        },
+        "2": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 0,
+          "notas": 0.5
+        },
+        "3": {
+          "obras": 0,
+          "tecnica": 1,
+          "ritmo": 1,
+          "notas": 0
+        }
+      }
+    }
+  ]
+}
