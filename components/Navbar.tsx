@@ -28,17 +28,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   return (
     <header className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white shadow-lg">
-      {/* Patrón de teclas de piano decorativas en el borde superior */}
-      <div className="flex h-1.5 w-full bg-slate-950 overflow-hidden">
-        {Array.from({ length: 48 }).map((_, i) => (
-          <div
-            key={i}
-            className={`flex-1 h-full ${
-              [1, 3, 6, 8, 10].includes(i % 12) ? "bg-slate-700" : "bg-amber-400/80"
-            }`}
-          />
-        ))}
-      </div>
+      {/* Línea decorativa sutil y elegante en el borde superior */}
+      <div className="h-[2px] w-full bg-gradient-to-r from-amber-500/10 via-amber-400/60 to-amber-500/10" />
 
       <div className="max-w-6xl mx-auto px-3 sm:px-4 py-2.5 flex items-center justify-between gap-2">
         {/* Título & Logo en Móvil */}
