@@ -307,7 +307,11 @@ export function generateInitial28Students(): Student[] {
       pin,
       avatar,
       level,
-      scoresByWeek: {},
+      scoresByWeek: {
+        1: { obras: obrasW1, tecnica: tecW1, ritmo: ritmoW1, notas: 0 },
+        2: { obras: obrasW2, tecnica: tecW2, ritmo: 0, notas: notasW2 },
+        3: { obras: obrasW3, tecnica: tecW3, ritmo: ritmoW3, notas: 0 },
+      },
     };
   });
 }

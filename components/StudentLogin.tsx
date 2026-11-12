@@ -18,7 +18,7 @@ export const StudentLogin: React.FC<StudentLoginProps> = ({
   isMuted,
 }) => {
   const [pin, setPin] = useState("");
-  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [isDemoMode, setIsDemoMode] = useState(true);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
