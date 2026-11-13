@@ -24,6 +24,9 @@ interface NotificationModalProps {
   onClose: () => void;
 }
 
+const VAPID_KEY =
+  "BEtiGpnsI9vD47l22VuMrtaBtaP7g9jD9OyN3I7P2f0Z9H-rsSRCcPdMos_ng7Vdu3-AzSeDc8hHuLa2co4_rpY";
+
 function urlBase64ToUint8Array(base64String: string) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
@@ -33,6 +36,52 @@ function urlBase64ToUint8Array(base64String: string) {
     outputArray[i] = rawData.charCodeAt(i);
   }
   return outputArray;
+}
+
+// Asegura que el service worker esté registrado y suscrito a Web Push
+async function ensurePushSubscribed(
+  studentId: string,
+  studentName: string
+): Promise<PushSubscription | null> {
+  if (typeof window === "undefined" || !("serviceWorker" in navigator)) return null;
+
+  try {
+    const reg = await navigator.serviceWorker.register("/sw.js");
+
+    // Esperar a que el SW esté activo (con timeout de seguridad para no congelar la UI)
+    await Promise.race([
+      navigator.serviceWorker.ready,
+      new Promise((resolve) => setTimeout(resolve, 2000)),
+    ]);
+
+    if (!reg.pushManager) return null;
+
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) {
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_KEY),
+      });
+    }
+
+    if (sub) {
+      // Registrar en el backend
+      fetch("/api/notifications/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subscription: sub.toJSON(),
+          studentId,
+          studentName,
+        }),
+      }).catch(console.warn);
+    }
+
+    return sub;
+  } catch (err) {
+    console.warn("Aviso en ensurePushSubscribed:", err);
+    return null;
+  }
 }
 
 export const NotificationModal: React.FC<NotificationModalProps> = ({
@@ -67,11 +116,18 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
       playEncouragementChime();
     }
 
-    // Detectar si ya tenía permiso concedido o si es iOS en navegador Safari estándar
+    // Comprobar estado de notificaciones y registrar Service Worker en segundo plano
     if (typeof window !== "undefined") {
-      if ("Notification" in window && Notification.permission === "granted") {
-        setPushStatus("granted");
+      if ("Notification" in window) {
+        if (Notification.permission === "granted") {
+          setPushStatus("granted");
+          // Sincronizar Service Worker y suscripción en segundo plano sin bloquear
+          ensurePushSubscribed(id, name).catch(() => {});
+        } else if (Notification.permission === "denied") {
+          setPushStatus("denied");
+        }
       }
+
       const isIOS =
         /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
       const isStandalone =
@@ -81,16 +137,13 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
         setIsIOSWithoutPWA(true);
       }
     }
-  }, [rankChange, isMuted]);
+  }, [rankChange, isMuted, id, name]);
 
   const handleRequestPush = async () => {
     if (typeof window === "undefined") return;
 
     if (!("Notification" in window)) {
-      if (isIOSWithoutPWA) {
-        // Para iOS, las instrucciones visuales ya están renderizadas en pantalla
-        return;
-      }
+      if (isIOSWithoutPWA) return;
       alert("Tu navegador no admite notificaciones push nativas.");
       return;
     }
@@ -105,52 +158,28 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
 
       setPushStatus("granted");
 
-      // Registrar Service Worker y suscribir a Web Push
-      if ("serviceWorker" in navigator) {
-        try {
-          const reg = await navigator.serviceWorker.register("/sw.js");
-          await navigator.serviceWorker.ready;
+      // Sincronizar Service Worker y registrar en el servidor
+      const sub = await ensurePushSubscribed(id, name);
 
-          const VAPID_KEY =
-            "BEtiGpnsI9vD47l22VuMrtaBtaP7g9jD9OyN3I7P2f0Z9H-rsSRCcPdMos_ng7Vdu3-AzSeDc8hHuLa2co4_rpY";
-
-          let sub = await reg.pushManager.getSubscription();
-          if (!sub) {
-            sub = await reg.pushManager.subscribe({
-              userVisibleOnly: true,
-              applicationServerKey: urlBase64ToUint8Array(VAPID_KEY),
-            });
-          }
-
-          // Enviar la suscripción al servidor
-          await fetch("/api/notifications/subscribe", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              subscription: sub.toJSON(),
-              studentId: id,
-              studentName: name,
-            }),
-          });
-        } catch (swErr) {
-          console.warn("ServiceWorker push subscribe fallback:", swErr);
-        }
-      }
-
-      // Feedback nativo inmediato
+      // Feedback nativo inmediato en la pantalla
       try {
         if ("serviceWorker" in navigator) {
-          const reg = await navigator.serviceWorker.ready;
-          reg.showNotification("🎹 ¡Avisos Activados!", {
-            body: `¡Hola ${name}! Tu teléfono te avisará cada vez que la profesora publique notas.`,
-            icon: "/favicon.ico",
-            badge: "/favicon.ico",
-          });
-        } else {
-          new Notification("🎹 ¡Avisos Activados!", {
-            body: `¡Hola ${name}! Tu teléfono te avisará cada vez que la profesora publique notas.`,
-            icon: "/favicon.ico",
-          });
+          const reg = await Promise.race([
+            navigator.serviceWorker.ready,
+            new Promise<ServiceWorkerRegistration | null>((r) => setTimeout(() => r(null), 1500)),
+          ]);
+          if (reg && reg.showNotification) {
+            reg.showNotification("🎹 ¡Avisos Activados!", {
+              body: `¡Hola ${name}! Tu teléfono te avisará cada vez que la profesora publique notas.`,
+              icon: "/favicon.ico",
+              badge: "/favicon.ico",
+            } as any);
+          } else {
+            new Notification("🎹 ¡Avisos Activados!", {
+              body: `¡Hola ${name}! Tu teléfono te avisará cada vez que la profesora publique notas.`,
+              icon: "/favicon.ico",
+            });
+          }
         }
       } catch {}
     } catch {
@@ -165,39 +194,61 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
     setTestPushFeedback("");
 
     try {
-      let subJson: any = null;
+      // 1. Notificación nativa inmediata en pantalla con feedback háptico (vibración)
+      let shownLocally = false;
       if ("serviceWorker" in navigator) {
-        const reg = await navigator.serviceWorker.ready;
-        if (reg) {
-          // Disparar notificación nativa en el móvil
-          reg.showNotification("🎹 La Liga del Pianista", {
-            body: `¡Aviso de prueba para ${name}! Funciona perfectamente aún con la app cerrada.`,
-            icon: "/favicon.ico",
-            badge: "/favicon.ico",
-            data: { url: "/" },
-          });
-          const sub = await reg.pushManager?.getSubscription();
-          if (sub) subJson = sub.toJSON();
+        try {
+          const reg = await Promise.race([
+            navigator.serviceWorker.ready,
+            new Promise<ServiceWorkerRegistration | null>((r) => setTimeout(() => r(null), 1200)),
+          ]);
+          if (reg && reg.showNotification) {
+            await reg.showNotification("🎹 La Liga del Pianista", {
+              body: `¡Aviso de prueba para ${name}! Funciona perfectamente incluso con el móvil bloqueado.`,
+              icon: "/favicon.ico",
+              badge: "/favicon.ico",
+              data: { url: "/" },
+            } as any);
+            shownLocally = true;
+          }
+        } catch (err) {
+          console.warn("Fallback service worker showNotification:", err);
         }
       }
 
-      // Probar además vía llamada a la API Web Push del servidor
-      const res = await fetch("/api/notifications/test", {
+      if (!shownLocally && "Notification" in window && Notification.permission === "granted") {
+        try {
+          new Notification("🎹 La Liga del Pianista", {
+            body: `¡Aviso de prueba para ${name}! Notificaciones activas.`,
+            icon: "/favicon.ico",
+          });
+          shownLocally = true;
+        } catch {}
+      }
+
+      // 2. Obtener suscripción y disparar test de backend (con timeout estricto para no colgarse)
+      const sub = await Promise.race([
+        ensurePushSubscribed(id, name),
+        new Promise<PushSubscription | null>((r) => setTimeout(() => r(null), 2000)),
+      ]);
+
+      const testPromise = fetch("/api/notifications/test", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          subscription: subJson,
+          subscription: sub ? sub.toJSON() : null,
           studentName: name,
         }),
       });
 
-      if (res.ok) {
-        setTestPushFeedback("¡Aviso enviado! Mira la barra o pantalla de tu móvil.");
-      } else {
-        setTestPushFeedback("¡Aviso lanzado en tu pantalla!");
-      }
+      await Promise.race([
+        testPromise,
+        new Promise((resolve) => setTimeout(resolve, 3000)),
+      ]);
+
+      setTestPushFeedback("✅ ¡Notificación enviada! Revisa la barra superior o pantalla de bloqueo.");
     } catch {
-      setTestPushFeedback("¡Aviso lanzado en tu pantalla!");
+      setTestPushFeedback("✅ ¡Notificación enviada a tu pantalla!");
     } finally {
       setIsTestingPush(false);
     }
@@ -347,6 +398,10 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
                       {testPushFeedback}
                     </p>
                   )}
+                </div>
+              ) : pushStatus === "denied" ? (
+                <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-[11px]">
+                  ⚠️ Las notificaciones están bloqueadas en tu navegador. Toca el icono del candado 🔒 junto a la dirección web y activa los permisos de notificación.
                 </div>
               ) : (
                 <button

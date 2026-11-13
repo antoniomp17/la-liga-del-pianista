@@ -1,4 +1,13 @@
 // Service Worker para Notificaciones Push Nativas en La Liga del Pianista
+
+self.addEventListener("install", function (event) {
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", function (event) {
+  event.waitUntil(self.clients.claim());
+});
+
 self.addEventListener("push", function (event) {
   if (!event.data) return;
 
@@ -9,7 +18,7 @@ self.addEventListener("push", function (event) {
       body: data.body || "¡Nuevas notas publicadas! Entra a ver tu clasificación.",
       icon: data.icon || "/favicon.ico",
       badge: data.badge || "/favicon.ico",
-      vibrate: [100, 50, 100],
+      vibrate: [200, 100, 200],
       data: {
         url: data.url || "/",
       },
@@ -22,6 +31,8 @@ self.addEventListener("push", function (event) {
       self.registration.showNotification("🎹 La Liga del Pianista", {
         body: text,
         icon: "/favicon.ico",
+        badge: "/favicon.ico",
+        vibrate: [200, 100, 200],
       })
     );
   }

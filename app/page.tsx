@@ -24,8 +24,12 @@ function ContestAppContent() {
   // Modal de Bases y Calendario Oficial
   const [showRulesModal, setShowRulesModal] = useState(false);
 
-  // Cargar semana oficial pública del concurso
+  // Cargar semana oficial pública del concurso y registrar Service Worker
   useEffect(() => {
+    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    }
+
     fetch("/api/contest/info")
       .then((res) => res.json())
       .then((json) => {
