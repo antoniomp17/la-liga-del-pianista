@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getContestState, saveContestState } from "@/lib/storage";
 import { calculateRanking } from "@/lib/ranking";
 import { verifyAdminToken, secureCompare } from "@/lib/security";
+import { sendBroadcastPushNotification } from "@/lib/pushNotifications";
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,9 +26,20 @@ export async function POST(request: NextRequest) {
     const droppers = fullRanking.filter((s) => s.rankChange < 0);
     const steady = fullRanking.filter((s) => s.rankChange === 0);
 
+    // Enviar notificación push automática a todos los móviles registrados
+    const pushResult = await sendBroadcastPushNotification({
+      title: "🎹 ¡Nuevas Notas Publicadas!",
+      body: `Semana ${state.settings.currentWeek} publicada. ¡Entra a ver tu nuevo puesto en la Liga!`,
+      url: "/",
+    }).catch((err) => {
+      console.warn("Aviso: Error enviando push notifications:", err);
+      return { sent: 0, failed: 0 };
+    });
+
     return NextResponse.json({
       success: true,
       message: `¡Resultados de la Semana ${state.settings.currentWeek} publicados oficialmente!`,
+      pushResult,
       summary: {
         totalStudents: fullRanking.length,
         climbersCount: climbers.length,

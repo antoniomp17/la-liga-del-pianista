@@ -190,7 +190,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
 
-      alert(`🎉 ${data.message}\nSubieron: ${data.summary.climbersCount} alumnos\nBajaron: ${data.summary.droppersCount} alumnos\nSe mantuvieron: ${data.summary.steadyCount}`);
+      const pushText = data.pushResult ? `\n📲 Notificaciones Push enviadas a móviles: ${data.pushResult.sent}` : "";
+      alert(`🎉 ${data.message}\nSubieron: ${data.summary.climbersCount} alumnos\nBajaron: ${data.summary.droppersCount} alumnos\nSe mantuvieron: ${data.summary.steadyCount}${pushText}`);
       await fetchAdminData(adminToken);
     } catch (err: unknown) {
       const error = err as Error;
@@ -353,78 +354,113 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
 
   return (
     <div className="max-w-5xl mx-auto my-2 sm:my-6 px-1 sm:px-4 text-slate-100 pb-20 sm:pb-8">
-      {/* Barra de navegación de pestañas (Mobile First) */}
-      <div className="bg-slate-900/95 rounded-2xl border border-slate-800 p-1.5 sm:p-2.5 mb-3 sm:mb-6 shadow-xl flex items-center justify-between gap-1.5 flex-wrap">
-        <div className="grid grid-cols-4 sm:flex gap-1 flex-1 sm:flex-initial">
+      {/* Barra de navegación de pestañas (Mobile First & Anti-Colapso) */}
+      <div className="bg-slate-900/95 rounded-2xl border border-slate-800 p-2 sm:p-2.5 mb-3 sm:mb-6 shadow-xl space-y-2 sm:space-y-0 sm:flex sm:items-center sm:justify-between sm:gap-2">
+        {/* Cabecera superior en móvil: Indicador del modo y botones de Bases / Salir */}
+        <div className="flex items-center justify-between gap-2 sm:hidden border-b border-slate-800/80 pb-2">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <span className="text-[11px] font-black tracking-wider uppercase text-slate-300 truncate">
+              Panel Profesora
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 shrink-0">
+            {onOpenRules && (
+              <button
+                type="button"
+                onClick={onOpenRules}
+                title="Ver Bases Oficiales"
+                className="py-1 px-2.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-bold hover:bg-amber-500/25 transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <span>📜 Bases</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={handleLogoutAdmin}
+              title="Cerrar sesión"
+              className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-700 transition-colors cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5 text-rose-400" />
+            </button>
+          </div>
+        </div>
+
+        {/* 4 Pestañas al 100% de ancho en móvil, sin compresión ni desbordamiento */}
+        <div className="w-full sm:w-auto grid grid-cols-4 sm:flex gap-1 sm:gap-1.5 bg-slate-950/70 sm:bg-transparent p-1 sm:p-0 rounded-xl border border-slate-800/80 sm:border-0">
           <button
+            type="button"
             onClick={() => setActiveTab("scores")}
-            className={`flex items-center justify-center gap-1 py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all ${
+            className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 py-2 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition-all cursor-pointer ${
               activeTab === "scores"
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
+                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-black"
+                : "text-slate-400 hover:text-white hover:bg-slate-800/60 font-semibold"
             }`}
           >
-            <Edit3 className="w-3.5 h-3.5 shrink-0" />
-            <span className="hidden sm:inline">Notas</span>
-            <span className="sm:hidden text-[11px]">Notas</span>
+            <Edit3 className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0" />
+            <span className="text-[10px] sm:text-xs">Notas</span>
           </button>
 
           <button
+            type="button"
             onClick={() => setActiveTab("ranking")}
-            className={`flex items-center justify-center gap-1 py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all ${
+            className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 py-2 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition-all cursor-pointer ${
               activeTab === "ranking"
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
+                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-black"
+                : "text-slate-400 hover:text-white hover:bg-slate-800/60 font-semibold"
             }`}
           >
-            <Trophy className="w-3.5 h-3.5 shrink-0" />
-            <span className="hidden sm:inline">Ranking</span>
-            <span className="sm:hidden text-[11px]">Ranking</span>
+            <Trophy className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0" />
+            <span className="text-[10px] sm:text-xs">Ranking</span>
           </button>
 
           <button
+            type="button"
             onClick={() => setActiveTab("students")}
-            className={`flex items-center justify-center gap-1 py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all ${
+            className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 py-2 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition-all cursor-pointer ${
               activeTab === "students"
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
+                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-black"
+                : "text-slate-400 hover:text-white hover:bg-slate-800/60 font-semibold"
             }`}
           >
-            <Users className="w-3.5 h-3.5 shrink-0" />
-            <span className="hidden sm:inline">Alumnos</span>
-            <span className="sm:hidden text-[11px]">Alumnos</span>
+            <Users className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0" />
+            <span className="text-[10px] sm:text-xs">Alumnos</span>
           </button>
 
           <button
+            type="button"
             onClick={() => setActiveTab("settings")}
-            className={`flex items-center justify-center gap-1 py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all ${
+            className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 py-2 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition-all cursor-pointer ${
               activeTab === "settings"
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
+                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-black"
+                : "text-slate-400 hover:text-white hover:bg-slate-800/60 font-semibold"
             }`}
           >
-            <Settings className="w-3.5 h-3.5 shrink-0" />
-            <span className="hidden sm:inline">Ajustes</span>
-            <span className="sm:hidden text-[11px]">Ajustes</span>
+            <Settings className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0" />
+            <span className="text-[10px] sm:text-xs">Ajustes</span>
           </button>
         </div>
 
-        <div className="flex items-center gap-1 ml-auto shrink-0">
+        {/* Acciones de escritorio a la derecha */}
+        <div className="hidden sm:flex items-center gap-1.5 ml-auto shrink-0">
           {onOpenRules && (
             <button
+              type="button"
               onClick={onOpenRules}
               title="Ver Bases Oficiales"
-              className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold hover:bg-amber-500/25 transition-colors"
+              className="py-1.5 px-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold hover:bg-amber-500/25 transition-colors flex items-center gap-1 cursor-pointer"
             >
-              <span className="hidden sm:inline">📜 Bases</span>
-              <span className="sm:hidden text-[11px]">📜 Bases</span>
+              <span>📜 Bases</span>
             </button>
           )}
 
           <button
+            type="button"
             onClick={handleLogoutAdmin}
             title="Cerrar sesión"
-            className="p-2 rounded-xl bg-slate-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-700 transition-colors"
+            className="p-2 rounded-xl bg-slate-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-700 transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5 text-rose-400" />
           </button>
@@ -564,8 +600,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
                       </div>
                     </div>
 
-                    {/* 4 Entradas táctiles de notas */}
-                    <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800/80">
+                    {/* Entradas táctiles de notas adaptadas a móvil y escritorio */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 pt-2 border-t border-slate-800/80">
                       {/* Obras (Factor x2 con botones de paso rápido +2 / -2) */}
                       <div className="bg-slate-950/80 p-2 rounded-xl border border-rose-500/20">
                         <div className="flex items-center justify-between mb-1">

@@ -15,6 +15,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "La Liga Individual del Pianista | Clasificación Oficial",
   description: "Bases Oficiales y Calendario Anual de Competición • 28 Alumnos",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Liga Pianista",
+  },
 };
 
 export const viewport: Viewport = {

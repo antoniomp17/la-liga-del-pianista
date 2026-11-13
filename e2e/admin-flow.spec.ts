@@ -47,7 +47,7 @@ test.describe("Flujo Completo de la Profesora / Administradora (E2E)", () => {
     await expect(page.getByRole("heading", { name: /Semana \d+/i })).toBeVisible();
 
     // 10. Probar cierre de sesión de administración (vuelve a la vista de alumno)
-    const logoutBtn = page.getByTitle(/Cerrar sesión/i);
+    const logoutBtn = page.getByTitle(/Cerrar sesión/i).filter({ visible: true }).first();
     await logoutBtn.click();
     await expect(page.getByText("LA LIGA DEL PIANISTA 🎹")).toBeVisible();
   });

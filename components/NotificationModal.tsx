@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import confetti from "canvas-confetti";
-import { Sparkles, TrendingUp, TrendingDown, Bell, CheckCircle2, X } from "lucide-react";
+import { Sparkles, TrendingUp, TrendingDown, Bell, CheckCircle2, X, Smartphone } from "lucide-react";
 import { CurrentStudentDetails } from "@/types/contest";
 import { playTriumphChord, playEncouragementChime } from "@/lib/audio";
 
@@ -12,13 +12,25 @@ interface NotificationModalProps {
   onClose: () => void;
 }
 
+function urlBase64ToUint8Array(base64String: string) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
 export const NotificationModal: React.FC<NotificationModalProps> = ({
   currentStudent,
   isMuted,
   onClose,
 }) => {
-  const { rank, rankChange, pointsToNextRank, name } = currentStudent;
+  const { rank, rankChange, pointsToNextRank, name, id } = currentStudent;
   const [pushStatus, setPushStatus] = useState<"idle" | "granted" | "denied">("idle");
+  const [isIOSWithoutPWA, setIsIOSWithoutPWA] = useState(false);
 
   useEffect(() => {
     // Si subió puestos, lanzar confeti y sonido triunfal
@@ -39,26 +51,86 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
     } else if (rankChange < 0 && !isMuted) {
       playEncouragementChime();
     }
+
+    // Detectar si ya tenía permiso concedido o si es iOS
+    if (typeof window !== "undefined") {
+      if ("Notification" in window && Notification.permission === "granted") {
+        setPushStatus("granted");
+      }
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+      const isStandalone =
+        window.matchMedia("(display-mode: standalone)").matches ||
+        (navigator as any).standalone;
+      if (isIOS && !isStandalone) {
+        setIsIOSWithoutPWA(true);
+      }
+    }
   }, [rankChange, isMuted]);
 
   const handleRequestPush = async () => {
-    if (typeof window !== "undefined" && "Notification" in window) {
-      try {
-        const permission = await Notification.requestPermission();
-        if (permission === "granted") {
-          setPushStatus("granted");
-          new Notification("🎹 Concurso de Piano", {
-            body: `¡Avisos activados para ${name}! Te avisaremos cada vez que la profesora publique notas.`,
-            icon: "/favicon.ico",
-          });
-        } else {
-          setPushStatus("denied");
-        }
-      } catch {
-        setPushStatus("denied");
+    if (typeof window === "undefined") return;
+
+    if (!("Notification" in window)) {
+      if (isIOSWithoutPWA) {
+        alert(
+          "📱 En iPhone: Para recibir avisos automáticos, primero pulsa el botón Compartir en Safari (icono de la flecha hacia arriba) y selecciona 'Añadir a pantalla de inicio'."
+        );
+      } else {
+        alert("Tu navegador no admite notificaciones push automáticas.");
       }
-    } else {
-      alert("Tu navegador no soporta notificaciones push directas.");
+      return;
+    }
+
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission !== "granted") {
+        setPushStatus("denied");
+        return;
+      }
+
+      setPushStatus("granted");
+
+      // Registrar Service Worker y suscribir a Web Push
+      if ("serviceWorker" in navigator) {
+        try {
+          const reg = await navigator.serviceWorker.register("/sw.js");
+          await navigator.serviceWorker.ready;
+
+          const VAPID_KEY =
+            "BEtiGpnsI9vD47l22VuMrtaBtaP7g9jD9OyN3I7P2f0Z9H-rsSRCcPdMos_ng7Vdu3-AzSeDc8hHuLa2co4_rpY";
+
+          let sub = await reg.pushManager.getSubscription();
+          if (!sub) {
+            sub = await reg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: urlBase64ToUint8Array(VAPID_KEY),
+            });
+          }
+
+          // Enviar la suscripción al servidor para que el profesor pueda alertar a todos los alumnos con 1 clic
+          await fetch("/api/notifications/subscribe", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              subscription: sub.toJSON(),
+              studentId: id,
+              studentName: name,
+            }),
+          });
+        } catch (swErr) {
+          console.warn("ServiceWorker push subscribe fallback:", swErr);
+        }
+      }
+
+      // Feedback local inmediato
+      try {
+        new Notification("🎹 La Liga del Pianista", {
+          body: `¡Avisos automáticos activados para ${name}! Te avisaremos cada vez que se publiquen nuevas notas.`,
+          icon: "/favicon.ico",
+        });
+      } catch {}
+    } catch {
+      setPushStatus("denied");
     }
   };
 
@@ -68,7 +140,7 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
         {/* Botón cerrar */}
         <button
           onClick={onClose}
-          className="absolute top-3.5 right-3.5 p-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
+          className="absolute top-3.5 right-3.5 p-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
@@ -85,7 +157,9 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 mt-1.5 px-1">
                 ¡Enhorabuena, <strong>{name}</strong>! Has ascendido{" "}
-                <span className="font-bold text-emerald-400">+{rankChange} {rankChange === 1 ? "posición" : "posiciones"}</span>{" "}
+                <span className="font-bold text-emerald-400">
+                  +{rankChange} {rankChange === 1 ? "posición" : "posiciones"}
+                </span>{" "}
                 esta semana y ahora estás en el <strong>Puesto #{rank}</strong>.
               </p>
             </div>
@@ -99,7 +173,8 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 mt-1.5 px-1">
                 ¡Ánimo, <strong>{name}</strong>! Esta semana estás en el{" "}
-                <strong>Puesto #{rank}</strong> (has bajado {Math.abs(rankChange)} {Math.abs(rankChange) === 1 ? "puesto" : "puestos"}).
+                <strong>Puesto #{rank}</strong> (has bajado {Math.abs(rankChange)}{" "}
+                {Math.abs(rankChange) === 1 ? "puesto" : "puestos"}).
               </p>
               <div className="mt-2.5 p-2.5 rounded-xl bg-slate-800/80 border border-indigo-500/30 text-xs text-indigo-300">
                 ¡Estás a solo <strong>{pointsToNextRank} puntos</strong> de volver a subir! A por todas en la siguiente prueba. 🎹
@@ -127,28 +202,37 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
         </div>
 
         {/* Sección de Notificaciones Push Web */}
-        <div className="mt-3 p-3 sm:p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1.5">
+        <div className="mt-3 p-3 sm:p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-2">
           <div className="flex items-center gap-1.5">
-            <Bell className="w-3.5 h-3.5 text-amber-400" />
+            <Bell className="w-3.5 h-3.5 text-amber-400 shrink-0" />
             <h4 className="text-xs font-bold text-slate-200">
-              Avisos instantáneos al móvil
+              Avisos automáticos al móvil
             </h4>
           </div>
           <p className="text-[11px] text-slate-400 leading-snug">
-            Activa las notificaciones para que tu móvil te avise automáticamente cuando la profesora publique nuevas notas.
+            Activa los avisos para que tu teléfono te notifique automáticamente en cuanto la profesora publique nuevas notas.
           </p>
+
+          {isIOSWithoutPWA && (
+            <div className="p-2 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-[10px] text-indigo-300 flex items-start gap-1.5">
+              <Smartphone className="w-3.5 h-3.5 text-indigo-400 shrink-0 mt-0.5" />
+              <span>
+                <strong>Tip para iPhone:</strong> Pulsa Compartir en Safari ➔ <em>"Añadir a pantalla de inicio"</em> para recibir avisos incluso con la app cerrada.
+              </span>
+            </div>
+          )}
 
           {pushStatus === "granted" ? (
             <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold pt-1">
-              <CheckCircle2 className="w-4 h-4" />
-              <span>¡Notificaciones activadas en este dispositivo!</span>
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
+              <span>¡Notificaciones push activadas en este dispositivo!</span>
             </div>
           ) : (
             <button
               onClick={handleRequestPush}
-              className="w-full mt-1.5 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-amber-300 border border-amber-500/30 hover:border-amber-400 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+              className="w-full mt-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-amber-300 border border-amber-500/30 hover:border-amber-400 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
             >
-              <Bell className="w-3 h-3" />
+              <Bell className="w-3.5 h-3.5 shrink-0" />
               <span>Activar Notificaciones en mi Pantalla</span>
             </button>
           )}
