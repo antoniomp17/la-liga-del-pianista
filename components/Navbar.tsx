@@ -1,15 +1,13 @@
 "use client";
 
 import React from "react";
-import { Music, Volume2, VolumeX, Shield, User, BookOpen, LogOut } from "lucide-react";
+import { Music, Shield, User, BookOpen, LogOut } from "lucide-react";
 
 interface NavbarProps {
   contestTitle: string;
   currentWeek: number;
   viewMode: "student" | "admin";
   onSwitchView: (mode: "student" | "admin") => void;
-  isMuted: boolean;
-  onToggleMute: () => void;
   currentStudentName?: string;
   onLogoutStudent?: () => void;
   onOpenRules?: () => void;
@@ -20,8 +18,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentWeek,
   viewMode,
   onSwitchView,
-  isMuted,
-  onToggleMute,
   currentStudentName,
   onLogoutStudent,
   onOpenRules,
@@ -48,31 +44,18 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Acciones & Controles adaptados a móvil */}
-        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Botón Bases Oficiales */}
           {onOpenRules && (
             <button
               onClick={onOpenRules}
               title="Bases Oficiales y Calendario"
-              className="flex items-center gap-1 px-2 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-[11px] sm:text-xs font-bold transition-all cursor-pointer active:scale-95"
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-[11px] sm:text-xs font-bold transition-all cursor-pointer active:scale-95"
             >
               <BookOpen className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
               <span className="hidden xs:inline sm:inline">Bases</span>
             </button>
           )}
-
-          {/* Sonido */}
-          <button
-            onClick={onToggleMute}
-            title={isMuted ? "Activar sonido" : "Silenciar sonido"}
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 active:scale-95 transition-colors"
-          >
-            {isMuted ? (
-              <VolumeX className="w-3.5 h-3.5 text-slate-500" />
-            ) : (
-              <Volume2 className="w-3.5 h-3.5 text-amber-400" />
-            )}
-          </button>
 
           {/* Salir (si alumno logueado) */}
           {viewMode === "student" && currentStudentName && onLogoutStudent && (

@@ -40,10 +40,9 @@ test.describe("Flujo Completo del Alumno (E2E)", () => {
     await page.getByRole("button", { name: /Cerrar modal/i }).click();
     await expect(page.getByText("Bases Oficiales & Calendario de Competición")).not.toBeVisible();
 
-    // 6. Probar botón de silenciar/activar sonido en Navbar
-    const soundToggle = page.locator("button[title*='sonido']");
-    await expect(soundToggle).toBeVisible();
-    await soundToggle.click();
+    // 6. Probar botón de Bases en Navbar
+    const basesBtn = page.getByTitle("Bases Oficiales y Calendario");
+    await expect(basesBtn).toBeVisible();
 
     // 7. Salir mediante "Cambiar de alumno"
     await page.getByRole("button", { name: /Cambiar de alumno/i }).click();

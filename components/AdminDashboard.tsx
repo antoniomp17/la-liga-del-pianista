@@ -22,6 +22,7 @@ import {
   Sparkles,
   LayoutGrid,
   Table as TableIcon,
+  Bell,
 } from "lucide-react";
 import { ContestSettings, Student } from "@/types/contest";
 import { FullRankedStudent } from "@/lib/ranking";
@@ -198,6 +199,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
       alert("Error: " + error.message);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const [testPushStatus, setTestPushStatus] = useState<string>("");
+  const handleTestBroadcastPush = async () => {
+    setTestPushStatus("Enviando aviso de prueba...");
+    try {
+      const res = await fetch("/api/notifications/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setTestPushStatus(`✅ ${data.message}`);
+      } else {
+        setTestPushStatus(`❌ ${data.error || "Error al enviar"}`);
+      }
+    } catch {
+      setTestPushStatus("❌ Error de conexión al probar notificaciones");
     }
   };
 
@@ -1321,6 +1342,32 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
                 }
                 className="w-28 py-2 px-3 bg-slate-950 rounded-xl border border-slate-700 text-xs sm:text-sm text-amber-300 font-mono"
               />
+            </div>
+
+            {/* Sección de Notificaciones Push a Móviles */}
+            <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-2.5">
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-200">
+                <Bell className="w-4 h-4 text-amber-400" />
+                <span>Notificaciones Push a Móviles</span>
+              </div>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Prueba el envío automático a todos los móviles suscritos (con la pantalla apagada o el navegador cerrado).
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleTestBroadcastPush}
+                  className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>Enviar Aviso de Prueba a Todos los Móviles</span>
+                </button>
+              </div>
+              {testPushStatus && (
+                <p className="text-[11px] text-amber-300 font-medium">
+                  {testPushStatus}
+                </p>
+              )}
             </div>
 
             <div className="pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2">

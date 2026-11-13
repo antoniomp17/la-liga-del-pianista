@@ -19,9 +19,22 @@ function ContestAppContent() {
   const searchParams = useSearchParams();
   const [viewMode, setViewMode] = useState<"student" | "admin">("student");
   const [isMuted, setIsMuted] = useState(false);
+  const [publicContestWeek, setPublicContestWeek] = useState<number>(1);
 
   // Modal de Bases y Calendario Oficial
   const [showRulesModal, setShowRulesModal] = useState(false);
+
+  // Cargar semana oficial pública del concurso
+  useEffect(() => {
+    fetch("/api/contest/info")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data?.currentWeek) {
+          setPublicContestWeek(json.data.currentWeek);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Datos del alumno logueado
   const [studentData, setStudentData] = useState<StudentLeaderboardResponse | null>(null);
@@ -70,7 +83,7 @@ function ContestAppContent() {
     }
   };
 
-  const currentWeekNumber = studentData?.currentWeek || 3;
+  const currentWeekNumber = studentData?.currentWeek || publicContestWeek || 1;
   const currentWeekInfo = OFFICIAL_CALENDAR.find((c) => c.weekNumber === currentWeekNumber);
   const top3 = studentData ? studentData.top10.slice(0, 3) : [];
 
@@ -82,8 +95,6 @@ function ContestAppContent() {
         currentWeek={currentWeekNumber}
         viewMode={viewMode}
         onSwitchView={(mode) => setViewMode(mode)}
-        isMuted={isMuted}
-        onToggleMute={() => setIsMuted((prev) => !prev)}
         currentStudentName={studentData?.currentStudent.name}
         onLogoutStudent={handleLogoutStudent}
         onOpenRules={() => setShowRulesModal(true)}

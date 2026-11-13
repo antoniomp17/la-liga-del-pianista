@@ -2,8 +2,36 @@ import { describe, it, expect } from "vitest";
 import { NextRequest } from "next/server";
 import { GET as getStudentView } from "@/app/api/student/view/route";
 import { POST as postAdminLogin } from "@/app/api/admin/login/route";
+import { GET as getContestInfo } from "@/app/api/contest/info/route";
+import { POST as postTestPush } from "@/app/api/notifications/test/route";
 
 describe("API Route Handlers", () => {
+  describe("GET /api/contest/info", () => {
+    it("returns public contest settings with currentWeek", async () => {
+      const res = await getContestInfo();
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.success).toBe(true);
+      expect(json.data.currentWeek).toBeGreaterThanOrEqual(1);
+      expect(json.data.totalWeeks).toBe(27);
+    });
+  });
+
+  describe("POST /api/notifications/test", () => {
+    it("handles test push requests gracefully", async () => {
+      const req = new NextRequest("http://localhost:3000/api/notifications/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      const res = await postTestPush(req);
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.success).toBe(true);
+      expect(json.result).toBeDefined();
+    });
+  });
+
   describe("GET /api/student/view", () => {
     it("returns 400 when PIN is not provided", async () => {
       const req = new NextRequest("http://localhost:3000/api/student/view");
