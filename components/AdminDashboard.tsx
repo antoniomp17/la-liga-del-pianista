@@ -31,9 +31,14 @@ import { OFFICIAL_CALENDAR } from "@/lib/contestData";
 interface AdminDashboardProps {
   onLogout: () => void;
   onOpenRules?: () => void;
+  onWeekUpdated?: (newWeek: number) => void;
 }
 
-export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpenRules }) => {
+export const AdminDashboard: React.FC<AdminDashboardProps> = ({
+  onLogout,
+  onOpenRules,
+  onWeekUpdated,
+}) => {
   const [adminPin, setAdminPin] = useState("");
   const [adminToken, setAdminToken] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -66,7 +71,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
   });
 
   useEffect(() => {
-    const savedToken = sessionStorage.getItem("admin_token");
+    const savedToken =
+      typeof window !== "undefined"
+        ? localStorage.getItem("admin_token") || sessionStorage.getItem("admin_token")
+        : null;
     if (savedToken) {
       setAdminToken(savedToken);
       fetchAdminData(savedToken);
@@ -91,6 +99,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
       }
 
       if (data.token) {
+        localStorage.setItem("admin_token", data.token);
         sessionStorage.setItem("admin_token", data.token);
         setAdminToken(data.token);
         await fetchAdminData(data.token);
@@ -101,6 +110,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleLogoutAdmin = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("admin_token");
+      sessionStorage.removeItem("admin_token");
+    }
+    setAdminToken("");
+    setIsAuthenticated(false);
+    onLogout();
   };
 
   const fetchAdminData = async (tokenToUse?: string) => {
@@ -117,6 +136,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
         setStudents(resData.data.students);
         setFullRanking(resData.data.fullRanking);
         setSelectedWeek(resData.data.settings.currentWeek);
+        onWeekUpdated?.(resData.data.settings.currentWeek);
 
         initWeeklyScoresInput(resData.data.students, resData.data.settings.currentWeek);
       } else {
@@ -162,10 +182,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
         body: JSON.stringify({
           weekNumber: selectedWeek,
           scores: weeklyScoresInput,
+          setAsCurrentWeek: true,
         }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
+
+      if (data.currentWeek) {
+        onWeekUpdated?.(data.currentWeek);
+      }
 
       setSaveSuccessMessage(`¡Puntuaciones de la Semana ${selectedWeek} guardadas con éxito!`);
       await fetchAdminData(adminToken);
@@ -186,10 +211,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
     try {
       const res = await fetch("/api/admin/publish", {
         method: "POST",
-        headers: { "x-admin-token": adminToken },
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-token": adminToken,
+        },
+        body: JSON.stringify({ targetWeek: selectedWeek }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
+
+      if (data.currentWeek) {
+        onWeekUpdated?.(data.currentWeek);
+      }
 
       const pushText = data.pushResult ? `\n📲 Notificaciones Push enviadas a móviles: ${data.pushResult.sent}` : "";
       alert(`🎉 ${data.message}\nSubieron: ${data.summary.climbersCount} alumnos\nBajaron: ${data.summary.droppersCount} alumnos\nSe mantuvieron: ${data.summary.steadyCount}${pushText}`);
@@ -197,6 +230,34 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
     } catch (err: unknown) {
       const error = err as Error;
       alert("Error: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSetOfficialWeek = async (weekToSet: number) => {
+    if (!settings) return;
+    setIsLoading(true);
+    try {
+      const updated = { ...settings, currentWeek: weekToSet };
+      const res = await fetch("/api/admin/settings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-token": adminToken,
+        },
+        body: JSON.stringify(updated),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      setSettings(updated);
+      onWeekUpdated?.(weekToSet);
+      alert(`✅ La Semana ${weekToSet} es ahora la Semana Oficial de la Liga.`);
+      await fetchAdminData(adminToken);
+    } catch (err: unknown) {
+      const error = err as Error;
+      alert("Error al fijar semana: " + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -301,14 +362,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
       : `https://api.whatsapp.com/send?text=${encoded}`;
 
     window.open(waUrl, "_blank");
-  };
-
-  const handleLogoutAdmin = () => {
-    sessionStorage.removeItem("admin_token");
-    setIsAuthenticated(false);
-    setAdminPin("");
-    setAdminToken("");
-    onLogout();
   };
 
   if (!isAuthenticated) {
@@ -517,20 +570,42 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
                 </div>
               </div>
 
-              {/* Selector de Semanas 1 a 27 */}
-              <div className="flex items-center gap-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800 w-full sm:w-auto">
-                <span className="text-xs font-semibold text-slate-400 px-1 shrink-0">Semana:</span>
-                <select
-                  value={selectedWeek}
-                  onChange={(e) => handleWeekChange(Number(e.target.value))}
-                  className="bg-slate-900 text-amber-300 font-mono text-xs font-bold py-1.5 px-2.5 rounded-lg border border-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer w-full"
-                >
-                  {OFFICIAL_CALENDAR.map((cal) => (
-                    <option key={cal.weekNumber} value={cal.weekNumber}>
-                      Semana {cal.weekNumber} ({cal.dates}) · {cal.challengeType === "ritmo" ? "🥁 Ritmo" : "🎼 Claves"}
-                    </option>
-                  ))}
-                </select>
+              {/* Selector de Semanas 1 a 27 y fijar semana activa */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+                <div className="flex items-center gap-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800 w-full sm:w-auto">
+                  <span className="text-xs font-semibold text-slate-400 px-1 shrink-0">Semana:</span>
+                  <select
+                    value={selectedWeek}
+                    onChange={(e) => handleWeekChange(Number(e.target.value))}
+                    className="bg-slate-900 text-amber-300 font-mono text-xs font-bold py-1.5 px-2.5 rounded-lg border border-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer w-full"
+                  >
+                    {OFFICIAL_CALENDAR.map((cal) => (
+                      <option key={cal.weekNumber} value={cal.weekNumber}>
+                        Semana {cal.weekNumber} ({cal.dates}) · {cal.challengeType === "ritmo" ? "🥁 Ritmo" : "🎼 Claves"}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {settings && (
+                  <div className="flex items-center justify-between sm:justify-start gap-1.5 bg-slate-950/80 px-2 py-1.5 rounded-xl border border-slate-800 shrink-0">
+                    <span className="text-[10px] text-slate-400">Oficial:</span>
+                    <span className="text-[11px] font-bold font-mono text-amber-300 bg-amber-500/15 px-1.5 py-0.5 rounded border border-amber-500/30">
+                      Sem. {settings.currentWeek}
+                    </span>
+                    {selectedWeek !== settings.currentWeek && (
+                      <button
+                        type="button"
+                        onClick={() => handleSetOfficialWeek(selectedWeek)}
+                        disabled={isLoading}
+                        className="text-[10px] font-bold px-2 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                        title="Hacer que esta semana sea la activa oficial para todos los alumnos"
+                      >
+                        Fijar Sem. {selectedWeek} como Oficial
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 

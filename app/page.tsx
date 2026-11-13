@@ -12,7 +12,7 @@ import { NotificationModal } from "@/components/NotificationModal";
 import { AdminDashboard } from "@/components/AdminDashboard";
 import { RulesAndCalendarModal } from "@/components/RulesAndCalendarModal";
 import { StudentLeaderboardResponse } from "@/types/contest";
-import { RefreshCw, BookOpen, Sparkles } from "lucide-react";
+import { RefreshCw, BookOpen, Sparkles, Bell } from "lucide-react";
 import { OFFICIAL_CALENDAR } from "@/lib/contestData";
 
 function ContestAppContent() {
@@ -24,7 +24,7 @@ function ContestAppContent() {
   // Modal de Bases y Calendario Oficial
   const [showRulesModal, setShowRulesModal] = useState(false);
 
-  // Cargar semana oficial pública del concurso y registrar Service Worker
+  // Cargar semana oficial pública del concurso, registrar Service Worker y restaurar sesión persistente
   useEffect(() => {
     if (typeof window !== "undefined" && "serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
@@ -38,7 +38,17 @@ function ContestAppContent() {
         }
       })
       .catch(() => {});
-  }, []);
+
+    // Comprobar si hay PIN en URL o guardado en el dispositivo
+    const pinFromUrl = searchParams.get("pin");
+    const savedPin = typeof window !== "undefined" ? localStorage.getItem("piano_student_pin") : null;
+    const pinToUse = pinFromUrl || savedPin;
+
+    if (pinToUse) {
+      // Auto-login: no forzar apertura del modal en recargas de página
+      handleStudentLogin(pinToUse, !savedPin || !!pinFromUrl);
+    }
+  }, [searchParams]);
 
   // Datos del alumno logueado
   const [studentData, setStudentData] = useState<StudentLeaderboardResponse | null>(null);
@@ -46,16 +56,8 @@ function ContestAppContent() {
   const [studentError, setStudentError] = useState("");
   const [showNotificationModal, setShowNotificationModal] = useState(false);
 
-  // Leer PIN desde la URL al cargar (ejemplo: ?pin=7429 o ?pin=3452)
-  useEffect(() => {
-    const pinFromUrl = searchParams.get("pin");
-    if (pinFromUrl) {
-      handleStudentLogin(pinFromUrl);
-    }
-  }, [searchParams]);
-
   // Manejar el login de alumno por PIN
-  const handleStudentLogin = async (pin: string) => {
+  const handleStudentLogin = async (pin: string, openModal = true) => {
     setIsLoadingStudent(true);
     setStudentError("");
 
@@ -64,11 +66,32 @@ function ContestAppContent() {
       const data = await res.json();
 
       if (!res.ok || !data.success) {
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("piano_student_pin");
+        }
         throw new Error(data.error || "Código PIN no válido.");
       }
 
+      // Guardar PIN en localStorage para mantener sesión al recargar
+      if (typeof window !== "undefined") {
+        localStorage.setItem("piano_student_pin", pin);
+      }
+
       setStudentData(data.data);
-      setShowNotificationModal(true);
+      if (data.data.currentWeek) {
+        setPublicContestWeek(data.data.currentWeek);
+      }
+
+      // Solo abrir modal si es login manual y no lo había visto aún en esta semana
+      const seenKey = `piano_notif_seen_${pin}_w${data.data.currentWeek}`;
+      const alreadySeen = typeof window !== "undefined" && localStorage.getItem(seenKey) === "true";
+
+      if (openModal && !alreadySeen) {
+        setShowNotificationModal(true);
+        if (typeof window !== "undefined") {
+          localStorage.setItem(seenKey, "true");
+        }
+      }
     } catch (err: unknown) {
       const error = err as Error;
       setStudentError(error.message || "Error al conectar con el servidor.");
@@ -78,6 +101,9 @@ function ContestAppContent() {
   };
 
   const handleLogoutStudent = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("piano_student_pin");
+    }
     setStudentData(null);
     setStudentError("");
     setShowNotificationModal(false);
@@ -110,6 +136,7 @@ function ContestAppContent() {
           <AdminDashboard
             onLogout={() => setViewMode("student")}
             onOpenRules={() => setShowRulesModal(true)}
+            onWeekUpdated={(w) => setPublicContestWeek(w)}
           />
         )}
 
@@ -150,6 +177,15 @@ function ContestAppContent() {
                         <span>Sem {currentWeekNumber}: {currentWeekInfo.challengeTitle}</span>
                       </span>
                     )}
+                    <button
+                      type="button"
+                      onClick={() => setShowNotificationModal(true)}
+                      className="text-[10px] sm:text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-900 border border-amber-500/30 text-amber-300 hover:bg-slate-800 transition-colors flex items-center gap-1 cursor-pointer active:scale-95 shadow-sm"
+                      title="Ver avisos y notificaciones móviles"
+                    >
+                      <Bell className="w-3 h-3 text-amber-400 shrink-0" />
+                      <span>Avisos</span>
+                    </button>
                   </div>
 
                   <h2 className="text-xl sm:text-3xl font-black text-white tracking-tight px-1">

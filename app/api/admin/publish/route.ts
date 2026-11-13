@@ -17,10 +17,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No autorizado." }, { status: 401 });
     }
 
+    let body: any = {};
+    try {
+      body = await request.json();
+    } catch {}
+
+    if (body.targetWeek) {
+      const parsedWeek = Number(body.targetWeek);
+      if (parsedWeek >= 1 && parsedWeek <= state.settings.totalWeeks) {
+        state.settings.currentWeek = parsedWeek;
+      }
+    }
+
     state.settings.isResultsPublished = true;
     await saveContestState(state);
 
-    const fullRanking = calculateRanking(state);
+    const fullRanking = calculateRanking(state, state.settings.currentWeek);
 
     const climbers = fullRanking.filter((s) => s.rankChange > 0);
     const droppers = fullRanking.filter((s) => s.rankChange < 0);
@@ -38,6 +50,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      currentWeek: state.settings.currentWeek,
       message: `¡Resultados de la Semana ${state.settings.currentWeek} publicados oficialmente!`,
       pushResult,
       summary: {

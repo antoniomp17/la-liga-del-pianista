@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { weekNumber, scores } = body;
+    const { weekNumber, scores, setAsCurrentWeek } = body;
 
     if (!weekNumber || typeof scores !== "object") {
       return NextResponse.json(
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    if (week > state.settings.currentWeek) {
+    if (setAsCurrentWeek || week > state.settings.currentWeek) {
       state.settings.currentWeek = week;
     }
 
@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      currentWeek: state.settings.currentWeek,
       message: `Puntuaciones de la Semana ${week} guardadas correctamente.`,
     });
   } catch (error) {
