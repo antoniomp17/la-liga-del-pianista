@@ -23,6 +23,8 @@ import {
   LayoutGrid,
   Table as TableIcon,
   Bell,
+  Pencil,
+  X,
 } from "lucide-react";
 import { ContestSettings, Student } from "@/types/contest";
 import { FullRankedStudent } from "@/lib/ranking";
@@ -61,8 +63,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [mobileScoresView, setMobileScoresView] = useState<"cards" | "table">("cards");
   const [rankingView, setRankingView] = useState<"cards" | "table">("cards");
 
-  // Estado para nuevo alumno
-  const [newStudent, setNewStudent] = useState({
+  // Estado para gestión y edición de alumnos
+  const [editingStudentId, setEditingStudentId] = useState<string | null>(null);
+  const [studentSearchTerm, setStudentSearchTerm] = useState("");
+  const [studentFormData, setStudentFormData] = useState({
     name: "",
     pin: "",
     avatar: "🎹",
@@ -283,31 +287,77 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
-  const handleAddStudent = async (e: React.FormEvent) => {
+  const handleStartEdit = (student: Student) => {
+    setEditingStudentId(student.id);
+    setStudentFormData({
+      name: student.name,
+      pin: student.pin,
+      avatar: student.avatar || "🎹",
+      phone: student.phone || "",
+      level: student.level || "Intermedio",
+    });
+    // Desplazar suavemente hacia el formulario
+    window.scrollTo({ top: 120, behavior: "smooth" });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingStudentId(null);
+    setStudentFormData({
+      name: "",
+      pin: "",
+      avatar: "🎹",
+      phone: "",
+      level: "Intermedio",
+    });
+  };
+
+  const handleSaveStudent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newStudent.name || !newStudent.pin) {
+    if (!studentFormData.name.trim() || !studentFormData.pin.trim()) {
       alert("Introduce nombre y PIN del alumno.");
       return;
     }
     setIsLoading(true);
     try {
-      const res = await fetch("/api/admin/students", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-admin-token": adminToken,
-        },
-        body: JSON.stringify(newStudent),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      if (editingStudentId) {
+        // Modo Edición: Actualizar alumno con PUT
+        const res = await fetch("/api/admin/students", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-token": adminToken,
+          },
+          body: JSON.stringify({
+            id: editingStudentId,
+            ...studentFormData,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
 
-      setNewStudent({ name: "", pin: "", avatar: "🎹", phone: "", level: "Intermedio" });
-      alert("Alumno añadido correctamente");
-      await fetchAdminData(adminToken);
+        alert(`✅ Alumno "${studentFormData.name}" actualizado correctamente.`);
+        handleCancelEdit();
+        await fetchAdminData(adminToken);
+      } else {
+        // Modo Creación: Añadir nuevo alumno con POST
+        const res = await fetch("/api/admin/students", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-token": adminToken,
+          },
+          body: JSON.stringify(studentFormData),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        alert(`✅ Alumno "${studentFormData.name}" añadido al concurso.`);
+        handleCancelEdit();
+        await fetchAdminData(adminToken);
+      }
     } catch (err: unknown) {
       const error = err as Error;
-      alert(error.message);
+      alert("Error: " + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -1259,23 +1309,51 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
       )}
 
-      {/* PESTAÑA 3: GESTIÓN DE ALUMNOS */}
+      {/* PESTAÑA 3: GESTIÓN Y EDICIÓN DE ALUMNOS */}
       {activeTab === "students" && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Formulario de Creación / Edición */}
           <div className="bg-slate-900/95 rounded-2xl border border-slate-800 p-4 shadow-xl h-fit">
-            <h3 className="text-base font-bold text-white flex items-center gap-2 mb-3">
-              <PlusCircle className="w-4 h-4 text-indigo-400" />
-              Nuevo Alumno
-            </h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className={`text-base font-bold flex items-center gap-2 ${editingStudentId ? "text-amber-300" : "text-white"}`}>
+                {editingStudentId ? (
+                  <>
+                    <Edit3 className="w-4 h-4 text-amber-400" />
+                    <span>Editar Alumno</span>
+                  </>
+                ) : (
+                  <>
+                    <PlusCircle className="w-4 h-4 text-indigo-400" />
+                    <span>Nuevo Alumno</span>
+                  </>
+                )}
+              </h3>
+              {editingStudentId && (
+                <button
+                  type="button"
+                  onClick={handleCancelEdit}
+                  className="text-[11px] text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded-lg transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                  <span>Cancelar</span>
+                </button>
+              )}
+            </div>
 
-            <form onSubmit={handleAddStudent} className="space-y-3">
+            {editingStudentId && (
+              <div className="mb-3 p-2 rounded-xl bg-amber-500/10 border border-amber-500/25 text-[11px] text-amber-300 flex items-center justify-between">
+                <span>Modificando a: <strong>{studentFormData.name}</strong></span>
+              </div>
+            )}
+
+            <form onSubmit={handleSaveStudent} className="space-y-3">
               <div>
                 <label className="block text-[11px] font-semibold text-slate-300 mb-1">Nombre</label>
                 <input
                   type="text"
                   placeholder="Ej: Laura Gómez"
-                  value={newStudent.name}
-                  onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
+                  value={studentFormData.name}
+                  onChange={(e) => setStudentFormData({ ...studentFormData, name: e.target.value })}
                   className="w-full py-2 px-3 bg-slate-950 rounded-xl border border-slate-700 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
@@ -1288,8 +1366,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   type="text"
                   maxLength={6}
                   placeholder="Ej: 1029"
-                  value={newStudent.pin}
-                  onChange={(e) => setNewStudent({ ...newStudent, pin: e.target.value })}
+                  value={studentFormData.pin}
+                  onChange={(e) => setStudentFormData({ ...studentFormData, pin: e.target.value })}
                   className="w-full py-2 px-3 bg-slate-950 rounded-xl border border-slate-700 text-xs text-amber-300 font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
@@ -1299,8 +1377,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   Nivel de Lectura
                 </label>
                 <select
-                  value={newStudent.level}
-                  onChange={(e) => setNewStudent({ ...newStudent, level: e.target.value })}
+                  value={studentFormData.level}
+                  onChange={(e) => setStudentFormData({ ...studentFormData, level: e.target.value })}
                   className="w-full py-2 px-3 bg-slate-950 rounded-xl border border-slate-700 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 >
                   <option value="Iniciación">Iniciación (20s tiempo límite)</option>
@@ -1318,9 +1396,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <button
                       key={emoji}
                       type="button"
-                      onClick={() => setNewStudent({ ...newStudent, avatar: emoji })}
-                      className={`w-8 h-8 rounded-lg border text-sm flex items-center justify-center transition-all ${
-                        newStudent.avatar === emoji
+                      onClick={() => setStudentFormData({ ...studentFormData, avatar: emoji })}
+                      className={`w-8 h-8 rounded-lg border text-sm flex items-center justify-center transition-all cursor-pointer ${
+                        studentFormData.avatar === emoji
                           ? "border-amber-400 bg-amber-500/20"
                           : "border-slate-700 bg-slate-800 hover:bg-slate-700"
                       }`}
@@ -1331,43 +1409,110 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full mt-2 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md transition-all cursor-pointer active:scale-95"
-              >
-                Añadir al Concurso
-              </button>
+              <div className="flex gap-2 pt-1">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className={`flex-1 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all cursor-pointer active:scale-95 disabled:opacity-50 ${
+                    editingStudentId
+                      ? "bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20"
+                      : "bg-indigo-600 hover:bg-indigo-500 text-white"
+                  }`}
+                >
+                  {editingStudentId ? "Guardar Cambios" : "Añadir al Concurso"}
+                </button>
+                {editingStudentId && (
+                  <button
+                    type="button"
+                    onClick={handleCancelEdit}
+                    className="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition-colors cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                )}
+              </div>
             </form>
           </div>
 
-          <div className="md:col-span-2 bg-slate-900/95 rounded-2xl border border-slate-800 p-4 shadow-xl">
-            <h3 className="text-base font-bold text-white mb-3">
-              Alumnos Registrados ({students.length})
-            </h3>
+          {/* Lista de Alumnos con Búsqueda y Botones de Editar y Eliminar */}
+          <div className="md:col-span-2 bg-slate-900/95 rounded-2xl border border-slate-800 p-4 shadow-xl flex flex-col justify-between">
+            <div>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                <h3 className="text-base font-bold text-white flex items-center gap-1.5">
+                  <Users className="w-4 h-4 text-amber-400" />
+                  <span>Alumnos Registrados ({students.length})</span>
+                </h3>
 
-            <div className="divide-y divide-slate-800/80 max-h-[500px] overflow-y-auto pr-1">
-              {students.map((st) => (
-                <div key={st.id} className="py-2.5 flex items-center justify-between">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="text-xl shrink-0">{st.avatar}</span>
-                    <div className="min-w-0">
-                      <p className="font-bold text-xs text-slate-100 truncate">{st.name}</p>
-                      <p className="text-[10px] text-slate-400">
-                        PIN: <code className="text-amber-400 font-mono">{st.pin}</code> · {st.level || "Intermedio"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => handleDeleteStudent(st.id, st.name)}
-                    className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-950 text-slate-400 hover:text-rose-400 transition-colors shrink-0"
-                    title="Eliminar alumno"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                {/* Filtro rápido de alumnos */}
+                <div className="relative w-full sm:w-56">
+                  <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Buscar alumno o PIN..."
+                    value={studentSearchTerm}
+                    onChange={(e) => setStudentSearchTerm(e.target.value)}
+                    className="w-full pl-8 pr-2.5 py-1.5 bg-slate-950 rounded-xl border border-slate-700 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  />
                 </div>
-              ))}
+              </div>
+
+              <div className="divide-y divide-slate-800/80 max-h-[520px] overflow-y-auto pr-1">
+                {students
+                  .filter((st) =>
+                    st.name.toLowerCase().includes(studentSearchTerm.toLowerCase()) ||
+                    st.pin.includes(studentSearchTerm)
+                  )
+                  .map((st) => {
+                    const isBeingEdited = editingStudentId === st.id;
+                    return (
+                      <div
+                        key={st.id}
+                        className={`py-2.5 px-2 flex items-center justify-between gap-2 transition-colors rounded-xl ${
+                          isBeingEdited ? "bg-amber-500/10 border border-amber-500/30" : "hover:bg-slate-800/40"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <span className="text-xl shrink-0">{st.avatar}</span>
+                          <div className="min-w-0">
+                            <p className="font-bold text-xs text-slate-100 truncate flex items-center gap-1.5">
+                              <span>{st.name}</span>
+                              {isBeingEdited && (
+                                <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                  Editando
+                                </span>
+                              )}
+                            </p>
+                            <p className="text-[10px] text-slate-400">
+                              PIN: <code className="text-amber-400 font-mono font-bold">{st.pin}</code> · {st.level || "Intermedio"}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Botones de acción: Editar y Eliminar */}
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => handleStartEdit(st)}
+                            className="flex items-center gap-1 py-1.5 px-2.5 rounded-lg bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 border border-slate-700 hover:border-amber-500/30 text-xs font-semibold transition-all cursor-pointer active:scale-95"
+                            title={`Editar datos de ${st.name}`}
+                          >
+                            <Pencil className="w-3.5 h-3.5 text-amber-400" />
+                            <span className="hidden xs:inline sm:inline">Editar</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteStudent(st.id, st.name)}
+                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-950 text-slate-400 hover:text-rose-400 border border-slate-700 hover:border-rose-500/30 transition-all cursor-pointer active:scale-95 shrink-0"
+                            title={`Eliminar ${st.name}`}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
           </div>
         </div>

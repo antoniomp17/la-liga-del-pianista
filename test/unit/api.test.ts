@@ -4,8 +4,32 @@ import { GET as getStudentView } from "@/app/api/student/view/route";
 import { POST as postAdminLogin } from "@/app/api/admin/login/route";
 import { GET as getContestInfo } from "@/app/api/contest/info/route";
 import { POST as postTestPush } from "@/app/api/notifications/test/route";
+import { PUT as putStudent } from "@/app/api/admin/students/route";
 
 describe("API Route Handlers", () => {
+  describe("PUT /api/admin/students", () => {
+    it("updates existing student details with admin credentials", async () => {
+      const req = new NextRequest("http://localhost:3000/api/admin/students", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-pin": "piano1234",
+        },
+        body: JSON.stringify({
+          id: "mateo-bach",
+          name: "Mateo Bach Editado",
+          level: "Avanzado",
+        }),
+      });
+      const res = await putStudent(req);
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.success).toBe(true);
+      expect(json.student.name).toBe("Mateo Bach Editado");
+      expect(json.student.level).toBe("Avanzado");
+    });
+  });
+
   describe("GET /api/contest/info", () => {
     it("returns public contest settings with currentWeek", async () => {
       const res = await getContestInfo();
