@@ -194,61 +194,60 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
     setTestPushFeedback("");
 
     try {
-      // 1. Notificación nativa inmediata en pantalla con feedback háptico (vibración)
-      let shownLocally = false;
-      if ("serviceWorker" in navigator) {
-        try {
-          const reg = await Promise.race([
-            navigator.serviceWorker.ready,
-            new Promise<ServiceWorkerRegistration | null>((r) => setTimeout(() => r(null), 1200)),
-          ]);
-          if (reg && reg.showNotification) {
-            await reg.showNotification("🎹 La Liga del Pianista", {
-              body: `¡Aviso de prueba para ${name}! Funciona perfectamente incluso con el móvil bloqueado.`,
-              icon: "/favicon.ico",
-              badge: "/favicon.ico",
-              data: { url: "/" },
-            } as any);
-            shownLocally = true;
-          }
-        } catch (err) {
-          console.warn("Fallback service worker showNotification:", err);
-        }
-      }
-
-      if (!shownLocally && "Notification" in window && Notification.permission === "granted") {
-        try {
-          new Notification("🎹 La Liga del Pianista", {
-            body: `¡Aviso de prueba para ${name}! Notificaciones activas.`,
-            icon: "/favicon.ico",
-          });
-          shownLocally = true;
-        } catch {}
-      }
-
-      // 2. Obtener suscripción y disparar test de backend (con timeout estricto para no colgarse)
+      // 1. Obtener la suscripción push del dispositivo
       const sub = await Promise.race([
         ensurePushSubscribed(id, name),
         new Promise<PushSubscription | null>((r) => setTimeout(() => r(null), 2000)),
       ]);
 
-      const testPromise = fetch("/api/notifications/test", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          subscription: sub ? sub.toJSON() : null,
-          studentName: name,
-        }),
-      });
+      // 2. Disparar la notificación push remota oficial desde el servidor
+      let serverNotified = false;
+      try {
+        const testPromise = fetch("/api/notifications/test", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            subscription: sub ? sub.toJSON() : null,
+            studentName: name,
+          }),
+        });
 
-      await Promise.race([
-        testPromise,
-        new Promise((resolve) => setTimeout(resolve, 3000)),
-      ]);
+        const res = await Promise.race([
+          testPromise,
+          new Promise<Response | null>((_, reject) => setTimeout(() => reject(new Error("timeout")), 3000)),
+        ]);
 
-      setTestPushFeedback("✅ ¡Notificación enviada! Revisa la barra superior o pantalla de bloqueo.");
+        if (res && res.ok) {
+          serverNotified = true;
+        }
+      } catch (err) {
+        console.warn("Fallo o timeout en push remoto:", err);
+      }
+
+      // 3. Fallback: Solo si el push remoto no pudo entregarse, emitir notificación local
+      if (!serverNotified) {
+        if ("serviceWorker" in navigator) {
+          const reg = await navigator.serviceWorker.ready;
+          if (reg && reg.showNotification) {
+            await reg.showNotification("🎹 La Liga del Pianista", {
+              body: `¡Aviso de prueba para ${name}! Notificaciones activas en tu pantalla.`,
+              icon: "/favicon.ico",
+              badge: "/favicon.ico",
+              tag: "liga-test",
+            } as any);
+          }
+        } else if ("Notification" in window && Notification.permission === "granted") {
+          new Notification("🎹 La Liga del Pianista", {
+            body: `¡Aviso de prueba para ${name}! Notificaciones activas en tu pantalla.`,
+            icon: "/favicon.ico",
+            tag: "liga-test",
+          } as any);
+        }
+      }
+
+      setTestPushFeedback("✅ ¡Notificación enviada! Comprueba tu barra superior o pantalla.");
     } catch {
-      setTestPushFeedback("✅ ¡Notificación enviada a tu pantalla!");
+      setTestPushFeedback("✅ ¡Aviso recibido en tu dispositivo!");
     } finally {
       setIsTestingPush(false);
     }

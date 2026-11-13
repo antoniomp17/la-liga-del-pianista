@@ -18,6 +18,7 @@ self.addEventListener("push", function (event) {
       body: data.body || "¡Nuevas notas publicadas! Entra a ver tu clasificación.",
       icon: data.icon || "/favicon.ico",
       badge: data.badge || "/favicon.ico",
+      tag: data.tag || "liga-pianista",
       vibrate: [200, 100, 200],
       data: {
         url: data.url || "/",
