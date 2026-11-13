@@ -312,6 +312,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, onOpen
               value={adminPin}
               onChange={(e) => setAdminPin(e.target.value)}
               placeholder="Introduce tu PIN maestro"
+              suppressHydrationWarning
               className="w-full text-center text-lg sm:text-xl font-mono tracking-wider py-3 px-4 bg-slate-950 rounded-xl border border-slate-700 text-indigo-300 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

@@ -71,6 +71,7 @@ export const StudentLogin: React.FC<StudentLoginProps> = ({
               value={pin}
               onChange={(e) => setPin(e.target.value.trim())}
               placeholder="••••"
+              suppressHydrationWarning
               className="w-full text-center text-2xl sm:text-3xl font-mono tracking-widest py-2.5 sm:py-3 px-3 bg-slate-950 rounded-xl border border-slate-700 text-amber-300 placeholder-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all shadow-inner"
             />
           </div>
