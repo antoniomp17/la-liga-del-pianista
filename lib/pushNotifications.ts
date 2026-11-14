@@ -1,4 +1,5 @@
 import { setVapidDetails, sendNotification, type PushSubscription } from "web-push";
+import { supabase } from "@/lib/supabase";
 import fs from "fs/promises";
 import path from "path";
 
@@ -33,8 +34,32 @@ let memorySubscriptions: StoredSubscription[] = [];
  * Lee todas las suscripciones push activas.
  */
 export async function getSubscriptions(): Promise<StoredSubscription[]> {
+  // 1. Supabase
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from("push_subscriptions")
+        .select("id, subscription, updated_at");
+      if (!error && data) {
+        const parsed = data.map((d: any) => ({
+          id: d.id,
+          subscription: d.subscription.subscription || d.subscription,
+          studentId: d.subscription.studentId,
+          studentName: d.subscription.studentName,
+          createdAt: d.updated_at,
+        })) as StoredSubscription[];
+        memorySubscriptions = parsed;
+        return memorySubscriptions;
+      }
+    } catch (err) {
+      console.warn("Error leyendo suscripciones de Supabase:", err);
+    }
+  }
+
+  // 2. Memoria
   if (memorySubscriptions.length > 0) return memorySubscriptions;
 
+  // 3. Archivo local / tmp
   try {
     const content = await fs.readFile(SUBSCRIPTIONS_FILE, "utf-8");
     memorySubscriptions = JSON.parse(content) as StoredSubscription[];
@@ -53,7 +78,6 @@ export async function saveSubscription(
   studentName?: string
 ): Promise<void> {
   const all = await getSubscriptions();
-  // Evitar duplicados por endpoint
   const filtered = all.filter((s) => s.subscription.endpoint !== sub.endpoint);
 
   const entry: StoredSubscription = {
@@ -67,6 +91,24 @@ export async function saveSubscription(
   filtered.push(entry);
   memorySubscriptions = filtered;
 
+  // 1. Guardar en Supabase
+  if (supabase) {
+    try {
+      await supabase.from("push_subscriptions").upsert({
+        id: entry.id,
+        subscription: {
+          subscription: sub,
+          studentId,
+          studentName,
+        },
+        updated_at: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("Error guardando suscripción en Supabase:", err);
+    }
+  }
+
+  // 2. Guardar en disco local / tmp
   try {
     await fs.mkdir(DATA_DIR, { recursive: true });
     await fs.writeFile(SUBSCRIPTIONS_FILE, JSON.stringify(filtered, null, 2), "utf-8");
@@ -107,7 +149,6 @@ export async function sendBroadcastPushNotification(payload: {
         sent++;
       } catch (err: any) {
         failed++;
-        // Si el endpoint ha expirado o el usuario revocó el permiso (404/410), marcar para eliminar
         if (err.statusCode === 404 || err.statusCode === 410) {
           expiredEndpoints.add(item.subscription.endpoint);
         }
@@ -117,9 +158,22 @@ export async function sendBroadcastPushNotification(payload: {
 
   // Limpiar suscripciones inválidas
   if (expiredEndpoints.size > 0) {
-    memorySubscriptions = memorySubscriptions.filter(
+    const valid = memorySubscriptions.filter(
       (s) => !expiredEndpoints.has(s.subscription.endpoint)
     );
+    memorySubscriptions = valid;
+
+    if (supabase) {
+      try {
+        const toDelete = memorySubscriptions
+          .filter((s) => expiredEndpoints.has(s.subscription.endpoint))
+          .map((s) => s.id);
+        if (toDelete.length > 0) {
+          await supabase.from("push_subscriptions").delete().in("id", toDelete);
+        }
+      } catch {}
+    }
+
     try {
       await fs.writeFile(
         SUBSCRIPTIONS_FILE,
