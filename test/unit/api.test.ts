@@ -16,16 +16,16 @@ describe("API Route Handlers", () => {
           "x-admin-pin": "piano1234",
         },
         body: JSON.stringify({
-          id: "laura-peque",
-          name: "Laura Peque Editada",
+          id: "jesyca",
+          name: "Jesyca Editada",
           level: "Avanzado",
         }),
       });
       const res = await putStudent(req);
-      expect(res.status).toBe(200);
       const json = await res.json();
+      expect(res.status).toBe(200);
       expect(json.success).toBe(true);
-      expect(json.student.name).toBe("Laura Peque Editada");
+      expect(json.student.name).toBe("Jesyca Editada");
       expect(json.student.level).toBe("Avanzado");
     });
   });

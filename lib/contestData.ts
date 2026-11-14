@@ -240,7 +240,7 @@ export const OFFICIAL_CALENDAR: CalendarWeek[] = [
 // Lista oficial de alumnos de la competición
 const STUDENT_NAMES = [
   "Laura",
-  "Laura peque",
+  "Laura C.",
   "Pilar",
   "Ana",
   "Cristina",
@@ -260,7 +260,6 @@ const STUDENT_NAMES = [
   "Alejandra",
   "Ramón",
   "Casandra",
-  "Jenny 2",
   "Jesyca",
 ];
 
@@ -273,7 +272,7 @@ const AVATARS = [
 // Lista de PINs únicos e impredecibles para los alumnos
 const STUDENT_PINS = [
   "7429", // Laura
-  "3185", // Laura peque
+  "3185", // Laura C.
   "9042", // Pilar
   "6518", // Ana
   "2834", // Cristina
@@ -293,14 +292,13 @@ const STUDENT_PINS = [
   "8927", // Alejandra
   "6241", // Ramón
   "3970", // Casandra
-  "5814", // Jenny 2
   "9432", // Jesyca
 ];
 
 export function generateInitial28Students(): Student[] {
   return STUDENT_NAMES.map((fullName, index) => {
     const pin = STUDENT_PINS[index] || (1001 + index).toString();
-    const id = fullName.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-");
+    const id = fullName.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
     const avatar = AVATARS[index % AVATARS.length];
     const level: Student["level"] = index < 7 ? "Avanzado" : index < 15 ? "Intermedio" : "Iniciación";
 
