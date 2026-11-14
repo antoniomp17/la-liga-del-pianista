@@ -120,10 +120,10 @@ export const StudentLogin: React.FC<StudentLoginProps> = ({
               onClick={() => handleQuickTest("7429")}
               className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-amber-500/30 text-slate-200 text-left transition-all hover:border-amber-400 flex items-center gap-1.5"
             >
-              <span className="text-sm">🥇</span>
+              <span className="text-sm">🎹</span>
               <div className="min-w-0">
-                <p className="font-semibold text-amber-300 truncate text-[11px]">Clara S. (Top 1)</p>
-                <p className="text-[9px] text-slate-400">En Top 10</p>
+                <p className="font-semibold text-amber-300 truncate text-[11px]">Laura (7429)</p>
+                <p className="text-[9px] text-slate-400">PIN Rápido</p>
               </div>
             </button>
 
@@ -132,10 +132,10 @@ export const StudentLogin: React.FC<StudentLoginProps> = ({
               onClick={() => handleQuickTest("9042")}
               className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-amber-500/30 text-slate-200 text-left transition-all hover:border-amber-400 flex items-center gap-1.5"
             >
-              <span className="text-sm">🥉</span>
+              <span className="text-sm">🌟</span>
               <div className="min-w-0">
-                <p className="font-semibold text-amber-300 truncate text-[11px]">Sofía M. (Top 3)</p>
-                <p className="text-[9px] text-slate-400">En Top 10</p>
+                <p className="font-semibold text-amber-300 truncate text-[11px]">Pilar (9042)</p>
+                <p className="text-[9px] text-slate-400">PIN Rápido</p>
               </div>
             </button>
 
@@ -144,10 +144,10 @@ export const StudentLogin: React.FC<StudentLoginProps> = ({
               onClick={() => handleQuickTest("3452")}
               className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-cyan-500/30 text-slate-200 text-left transition-all hover:border-cyan-400 flex items-center gap-1.5"
             >
-              <span className="text-sm">🎹</span>
+              <span className="text-sm">⚡</span>
               <div className="min-w-0">
-                <p className="font-semibold text-cyan-300 truncate text-[11px]">Martín S. (#11)</p>
-                <p className="text-[9px] text-slate-400">Fuera Top 10</p>
+                <p className="font-semibold text-cyan-300 truncate text-[11px]">Antonio (3452)</p>
+                <p className="text-[9px] text-slate-400">PIN Rápido</p>
               </div>
             </button>
 
@@ -156,10 +156,10 @@ export const StudentLogin: React.FC<StudentLoginProps> = ({
               onClick={() => handleQuickTest("6241")}
               className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-cyan-500/30 text-slate-200 text-left transition-all hover:border-cyan-400 flex items-center gap-1.5"
             >
-              <span className="text-sm">🎶</span>
+              <span className="text-sm">🎸</span>
               <div className="min-w-0">
-                <p className="font-semibold text-cyan-300 truncate text-[11px]">Emma V. (#19)</p>
-                <p className="text-[9px] text-slate-400">Fuera Top 10</p>
+                <p className="font-semibold text-cyan-300 truncate text-[11px]">Ramón (6241)</p>
+                <p className="text-[9px] text-slate-400">PIN Rápido</p>
               </div>
             </button>
           </div>

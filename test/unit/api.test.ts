@@ -16,8 +16,8 @@ describe("API Route Handlers", () => {
           "x-admin-pin": "piano1234",
         },
         body: JSON.stringify({
-          id: "mateo-bach",
-          name: "Mateo Bach Editado",
+          id: "laura-peque",
+          name: "Laura Peque Editada",
           level: "Avanzado",
         }),
       });
@@ -25,7 +25,7 @@ describe("API Route Handlers", () => {
       expect(res.status).toBe(200);
       const json = await res.json();
       expect(json.success).toBe(true);
-      expect(json.student.name).toBe("Mateo Bach Editado");
+      expect(json.student.name).toBe("Laura Peque Editada");
       expect(json.student.level).toBe("Avanzado");
     });
   });
@@ -82,7 +82,7 @@ describe("API Route Handlers", () => {
 
       const json = await res.json();
       expect(json.success).toBe(true);
-      expect(json.data.currentStudent.name).toBe("Clara Schumann");
+      expect(json.data.currentStudent.name).toBe("Laura");
       expect(json.data.top10.length).toBeLessThanOrEqual(10);
 
       // Verify privacy: top10 items must not expose PINs

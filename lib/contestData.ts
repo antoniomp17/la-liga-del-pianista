@@ -237,72 +237,75 @@ export const OFFICIAL_CALENDAR: CalendarWeek[] = [
   },
 ];
 
-// Generador de los 28 alumnos oficiales de la competición
+// Lista oficial de alumnos de la competición
 const STUDENT_NAMES = [
-  "Clara Schumann",
-  "Mateo Bach",
-  "Sofía Mozart",
-  "Lucas Chopin",
-  "Elena Beethoven",
-  "Daniel Debussy",
-  "Valeria Ravel",
-  "Hugo Liszt",
-  "Carmen Albéniz",
-  "Alejandro Granados",
-  // Posiciones 11 a 28 (Fuera de Top 10)
-  "Martín Satie",
-  "Paula Falla",
-  "Marcos Brahms",
-  "Lucía Tchaikovsky",
-  "Adrián Haydn",
-  "Sara Schubert",
-  "Pablo Rachmaninoff",
-  "Noa Mendelssohn",
-  "Javier Prokofiev",
-  "Emma Vivaldi",
-  "Iker Scarlatti",
-  "Alba Bartók",
-  "David Handel",
-  "Carla Grieg",
-  "Álvaro Saint-Saëns",
-  "Irene Sibelius",
-  "Gonzalo Puccini",
-  "Nerea Bizet",
+  "Laura",
+  "Laura peque",
+  "Pilar",
+  "Ana",
+  "Cristina",
+  "Cris",
+  "Ángel",
+  "Ángela",
+  "Javi",
+  "Edu",
+  "Antonio",
+  "Jenni",
+  "Tatiana",
+  "Jenny",
+  "Nicole",
+  "Lucas",
+  "Lurdes",
+  "Fátima",
+  "Alejandra",
+  "Ramón",
+  "Casandra",
+  "Jenny 2",
+  "Jesyca",
 ];
 
-const AVATARS = ["🎹", "🎼", "🌟", "🎵", "🎶", "🎻", "✨", "🔥", "🌸", "🎺", "⚡", "💫", "🎀", "🎯", "🥇", "🎨", "🚀", "💎", "🏆", "🎸", "🥁", "🪕", "🪄", "🌈", "🍀", "🌺", "🪐", "👑"];
+const AVATARS = [
+  "🎹", "🎼", "🌟", "🎵", "🎶", "🎻", "✨", "🔥", "🌸", "🎺",
+  "⚡", "💫", "🎀", "🎯", "🥇", "🎨", "🚀", "💎", "🏆", "🎸",
+  "🥁", "🪕", "🪄", "🌈", "🍀", "🌺", "🪐", "👑"
+];
 
-// Lista de PINs únicos e impredecibles para los 28 alumnos (no correlativos para evitar adivinación)
+// Lista de PINs únicos e impredecibles para los alumnos
 const STUDENT_PINS = [
-  "7429", "3185", "9042", "6518", "2834", "8190", "4721", "5368", "1947", "8603",
-  "3452", "6781", "2194", "5038", "9821", "4163", "7509", "1384", "8927", "6241",
-  "3970", "5814", "9432", "2765", "8051", "4693", "1528", "7346",
+  "7429", // Laura
+  "3185", // Laura peque
+  "9042", // Pilar
+  "6518", // Ana
+  "2834", // Cristina
+  "8190", // Cris
+  "4721", // Ángel
+  "5368", // Ángela
+  "1947", // Javi
+  "8603", // Edu
+  "3452", // Antonio
+  "6781", // Jenni
+  "2194", // Tatiana
+  "5038", // Jenny
+  "9821", // Nicole
+  "4163", // Lucas
+  "7509", // Lurdes
+  "1384", // Fátima
+  "8927", // Alejandra
+  "6241", // Ramón
+  "3970", // Casandra
+  "5814", // Jenny 2
+  "9432", // Jesyca
 ];
 
 export function generateInitial28Students(): Student[] {
   return STUDENT_NAMES.map((fullName, index) => {
     const pin = STUDENT_PINS[index] || (1001 + index).toString();
-    const id = fullName.toLowerCase().replace(/[^a-z0-9]/g, "-");
+    const id = fullName.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-");
     const avatar = AVATARS[index % AVATARS.length];
-    const level: Student["level"] = index < 8 ? "Avanzado" : index < 18 ? "Intermedio" : "Iniciación";
-
-    // Puntuaciones simuladas realistas para las semanas 1, 2 y 3 (Semana 1: Ritmo, Semana 2: Notas, Semana 3: Ritmo)
-    // Puntos Obras (entre 0 y 8), Técnica (0 a 2), Ritmo sem 1 y 3 (0 a 4), Notas sem 2 (0 a 2)
-    const baseSkill = 28 - index; // alumnos superiores tienen un poco más de consistencia
-    const obrasW1 = baseSkill > 20 ? 6 : baseSkill > 10 ? 4 : 0;
-    const obrasW2 = baseSkill > 22 ? 8 : baseSkill > 14 ? 6 : 0;
-    const obrasW3 = baseSkill > 18 ? 6 : baseSkill > 8 ? 4 : 0;
-
-    const tecW1 = baseSkill > 15 ? 2 : 1;
-    const tecW2 = baseSkill > 12 ? 2 : 1;
-    const tecW3 = baseSkill > 14 ? 2 : 1;
-
-    const ritmoW1 = Math.min(4, Math.max(1, Math.round((baseSkill / 28) * 4)));
-    const notasW2 = Math.min(2, Math.max(0.5, Math.round(((baseSkill / 28) * 2) * 2) / 2));
-    const ritmoW3 = Math.min(4, Math.max(1, Math.round((baseSkill / 28) * 4)));
+    const level: Student["level"] = index < 7 ? "Avanzado" : index < 15 ? "Intermedio" : "Iniciación";
 
     return {
-      id,
+      id: id || `alumno-${index + 1}`,
       name: fullName,
       pin,
       avatar,
