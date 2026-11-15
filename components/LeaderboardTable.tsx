@@ -134,7 +134,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         })}
       </div>
 
-      {/* CASO: El alumno NO está en el Top 10 (Puestos 11 al 28) */}
+      {/* CASO: El alumno NO está en el Top 10 (Puestos 11 en adelante) */}
       {!isStudentInTop10 && (
         <div className="bg-slate-50/80 border-t-2 border-dashed border-slate-200">
           {/* Separador de privacidad */}

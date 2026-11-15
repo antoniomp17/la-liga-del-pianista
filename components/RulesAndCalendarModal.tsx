@@ -22,7 +22,7 @@ export const RulesAndCalendarModal: React.FC<RulesAndCalendarModalProps> = ({
         <div className="p-3.5 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/90 shrink-0">
           <div className="min-w-0 pr-2">
             <span className="text-[9px] sm:text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200 uppercase tracking-wider">
-              16 Nov - Finales Junio · 28 Alumnos
+              16 Nov - Finales Junio · Competición Oficial
             </span>
             <h2 className="text-base sm:text-xl font-black text-slate-800 mt-1 truncate">
               LA LIGA DEL PIANISTA

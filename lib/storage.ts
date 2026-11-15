@@ -11,7 +11,7 @@ const DATA_FILE = path.join(DATA_DIR, "concurso.json");
 const INITIAL_STATE: ContestState = {
   settings: {
     title: "LA LIGA INDIVIDUAL DEL PIANISTA",
-    subtitle: "Bases Oficiales y Calendario Anual de Competición • 28 Alumnos",
+    subtitle: "Bases Oficiales y Calendario Anual de Competición",
     adminPin: "piano1234",
     currentWeek: 1,
     totalWeeks: 27,

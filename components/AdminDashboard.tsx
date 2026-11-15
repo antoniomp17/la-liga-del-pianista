@@ -399,7 +399,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
 
     const message = `¡Hola ${student.name}! 🎹 Aquí tienes tu actualización de LA LIGA DEL PIANISTA:\n\n` +
-      `🏆 Posición: Puesto #${student.rank} (de 28 alumnos)\n` +
+      `🏆 Posición: Puesto #${student.rank}\n` +
       `⭐ Puntuación Acumulada: ${student.totalScore} pts\n` +
       `💡 ${statusText}\n` +
       (student.rank > 1 ? `🎯 Te faltan ${student.pointsToNextRank} pts para alcanzar el Puesto #${student.rank - 1}\n\n` : "\n") +
@@ -1075,11 +1075,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <div className="flex items-center justify-between">
               <h3 className="text-sm sm:text-base font-black text-slate-800 flex items-center gap-1.5">
                 <Trophy className="w-4 h-4 text-amber-500" />
-                <span>Clasificación General (28 Alumnos)</span>
+                <span>Clasificación General</span>
               </h3>
-              <span className="text-[10px] text-slate-500 font-mono">
-                {filteredRanking.length} alumnos
-              </span>
             </div>
 
             <div className="flex items-center justify-between gap-2">
@@ -1440,7 +1437,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                 <h3 className="text-base font-bold text-slate-800 flex items-center gap-1.5">
                   <Users className="w-4 h-4 text-purple-600" />
-                  <span>Alumnos Registrados ({students.length})</span>
+                  <span>Alumnos Registrados</span>
                 </h3>
 
                 {/* Filtro rápido de alumnos */}
@@ -1527,7 +1524,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               Configuración de LA LIGA DEL PIANISTA
             </h3>
             <p className="text-[11px] text-slate-500 mt-0.5">
-              Bases oficiales de competición: 27 semanas · 28 alumnos
+              Bases oficiales de competición: 27 semanas
             </p>
           </div>
 
@@ -1614,7 +1611,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <button
                 type="button"
                 onClick={async () => {
-                  if (confirm("¿Restaurar los datos oficiales del concurso (28 alumnos y bases oficiales)?")) {
+                  if (confirm("¿Restaurar los datos oficiales del concurso y bases oficiales?")) {
                     await fetch("/api/admin/settings", {
                       method: "POST",
                       headers: {

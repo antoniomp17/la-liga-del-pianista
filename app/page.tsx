@@ -169,7 +169,7 @@ function ContestAppContent() {
                 <div className="text-center py-2 sm:py-4 space-y-1.5">
                   <div className="flex flex-wrap items-center justify-center gap-1.5">
                     <span className="text-[10px] sm:text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-white border border-amber-200/80 text-amber-800 font-mono uppercase tracking-wider shadow-2xs">
-                      16 NOV - JUNIO · 28 ALUMNOS
+                      16 NOV - JUNIO · LIGA OFICIAL
                     </span>
                     {currentWeekInfo && (
                       <span className="text-[10px] sm:text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 flex items-center gap-1 shadow-2xs">
@@ -256,8 +256,8 @@ function ContestAppContent() {
       )}
 
       {/* Pie de página oficial */}
-      <footer className="border-t border-slate-900 bg-slate-950/80 py-3 text-center text-[11px] text-slate-500 px-2">
-        <p>🎹 LA LIGA INDIVIDUAL DEL PIANISTA · Competición Anual · 28 Alumnos</p>
+      <footer className="border-t border-slate-100 bg-[#faf8f5] py-3 text-center text-[11px] text-slate-400 px-2">
+        <p>🎹 LA LIGA INDIVIDUAL DEL PIANISTA · Competición Anual</p>
       </footer>
     </div>
   );
