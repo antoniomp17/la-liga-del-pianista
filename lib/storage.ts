@@ -23,6 +23,15 @@ const INITIAL_STATE: ContestState = {
 
 let memoryState: ContestState | null = null;
 
+function cleanSubtitle(subtitle?: string): string {
+  if (!subtitle) return "Bases Oficiales y Calendario Anual de Competición";
+  return subtitle
+    .replace(/\s*•\s*\d+\s*Alumnos/gi, "")
+    .replace(/\s*\(\d+\s*Alumnos\)/gi, "")
+    .replace(/\b\d+\s*alumnos\b/gi, "")
+    .trim();
+}
+
 export async function getContestState(): Promise<ContestState> {
   // 1. Intentar leer desde Supabase (persistente e indestructible)
   if (supabase) {
@@ -35,6 +44,9 @@ export async function getContestState(): Promise<ContestState> {
 
       if (!error && data?.value) {
         memoryState = data.value as ContestState;
+        if (memoryState?.settings?.subtitle) {
+          memoryState.settings.subtitle = cleanSubtitle(memoryState.settings.subtitle);
+        }
         return memoryState;
       }
 
@@ -42,6 +54,7 @@ export async function getContestState(): Promise<ContestState> {
       if (!error && !data) {
         console.log("Inicializando estado en Supabase...");
         const initial = JSON.parse(JSON.stringify(INITIAL_STATE));
+        initial.settings.subtitle = cleanSubtitle(initial.settings.subtitle);
         await supabase.from("app_state").insert({
           key: "contest_state",
           value: initial,
@@ -55,15 +68,26 @@ export async function getContestState(): Promise<ContestState> {
   }
 
   // 2. Fallback a memoria si ya se cargó
-  if (memoryState) return memoryState;
+  if (memoryState) {
+    if (memoryState.settings?.subtitle) {
+      memoryState.settings.subtitle = cleanSubtitle(memoryState.settings.subtitle);
+    }
+    return memoryState;
+  }
 
   // 3. Fallback a archivo de disco local/tmp
   try {
     const content = await fs.readFile(DATA_FILE, "utf-8");
     memoryState = JSON.parse(content) as ContestState;
+    if (memoryState?.settings?.subtitle) {
+      memoryState.settings.subtitle = cleanSubtitle(memoryState.settings.subtitle);
+    }
     return memoryState;
   } catch {
     memoryState = JSON.parse(JSON.stringify(INITIAL_STATE));
+    if (memoryState?.settings?.subtitle) {
+      memoryState.settings.subtitle = cleanSubtitle(memoryState.settings.subtitle);
+    }
     try {
       await fs.mkdir(DATA_DIR, { recursive: true });
       await fs.writeFile(DATA_FILE, JSON.stringify(memoryState, null, 2), "utf-8");
@@ -75,6 +99,9 @@ export async function getContestState(): Promise<ContestState> {
 }
 
 export async function saveContestState(state: ContestState): Promise<void> {
+  if (state?.settings?.subtitle) {
+    state.settings.subtitle = cleanSubtitle(state.settings.subtitle);
+  }
   memoryState = state;
 
   // 1. Guardar en Supabase (permanente)
