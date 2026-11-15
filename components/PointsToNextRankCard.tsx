@@ -26,16 +26,16 @@ export const PointsToNextRankCard: React.FC<PointsToNextRankCardProps> = ({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl p-3.5 sm:p-5 border shadow-xl transition-all ${
+      className={`relative overflow-hidden rounded-2xl p-3.5 sm:p-5 border shadow-md transition-all ${
         isLeader
-          ? "bg-gradient-to-br from-amber-950/70 via-slate-900 to-amber-950/40 border-amber-500/50 shadow-amber-500/10"
-          : "bg-gradient-to-br from-slate-900 via-slate-900/95 to-indigo-950/50 border-indigo-500/30 shadow-indigo-500/10"
+          ? "bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50 border-amber-200/90 shadow-amber-100/60 text-slate-800"
+          : "bg-gradient-to-br from-indigo-50/70 via-white to-sky-50/60 border-indigo-100 shadow-indigo-100/40 text-slate-800"
       }`}
     >
-      {/* Resplandor decorativo */}
+      {/* Resplandor decorativo sutil en pastel */}
       <div
-        className={`absolute -right-8 -bottom-8 w-32 h-32 rounded-full blur-2xl pointer-events-none opacity-20 ${
-          isLeader ? "bg-amber-400" : "bg-indigo-500"
+        className={`absolute -right-8 -bottom-8 w-32 h-32 rounded-full blur-2xl pointer-events-none opacity-30 ${
+          isLeader ? "bg-amber-200" : "bg-indigo-200"
         }`}
       />
 
@@ -44,13 +44,13 @@ export const PointsToNextRankCard: React.FC<PointsToNextRankCardProps> = ({
         <div className="space-y-1.5 sm:space-y-2.5">
           <div className="inline-flex items-center gap-1.5 rounded-full text-[10px] sm:text-xs font-bold tracking-wide uppercase">
             {isLeader ? (
-              <span className="flex items-center gap-1 text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">
-                <Trophy className="w-3 h-3 text-amber-400" />
+              <span className="flex items-center gap-1 text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200">
+                <Trophy className="w-3 h-3 text-amber-600" />
                 <span>Líder de la Liga</span>
               </span>
             ) : (
-              <span className="flex items-center gap-1 text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded-full border border-indigo-500/30">
-                <Target className="w-3 h-3 text-indigo-400" />
+              <span className="flex items-center gap-1 text-indigo-900 bg-indigo-100 px-2 py-0.5 rounded-full border border-indigo-200">
+                <Target className="w-3 h-3 text-indigo-600" />
                 <span>Objetivo Próxima Posición</span>
               </span>
             )}
@@ -59,29 +59,29 @@ export const PointsToNextRankCard: React.FC<PointsToNextRankCardProps> = ({
           <div>
             {isLeader ? (
               <div>
-                <h3 className="text-lg sm:text-2xl font-black text-amber-300 flex items-center gap-1.5">
+                <h3 className="text-lg sm:text-2xl font-black text-amber-900 flex items-center gap-1.5">
                   ¡Vas en 1ª Posición! 🏆
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-300 mt-1">
+                <p className="text-xs sm:text-sm text-slate-600 mt-1">
                   ¡Eres el número 1 con <strong>{totalScore} pts</strong>! Defiende la corona esta semana.
                 </p>
               </div>
             ) : (
               <div>
                 <div className="flex items-baseline gap-1.5 flex-wrap">
-                  <span className="text-xs sm:text-sm font-semibold text-slate-400">Te faltan</span>
-                  <span className="text-2xl sm:text-4xl font-black text-amber-400 font-mono tracking-tight">
+                  <span className="text-xs sm:text-sm font-semibold text-slate-500">Te faltan</span>
+                  <span className="text-2xl sm:text-4xl font-black text-amber-600 font-mono tracking-tight">
                     {pointsToNextRank}
                   </span>
-                  <span className="text-sm sm:text-lg font-bold text-slate-200">
+                  <span className="text-sm sm:text-lg font-bold text-slate-700">
                     {pointsToNextRank === 1 ? "punto" : "puntos"}
                   </span>
-                  <span className="text-xs sm:text-sm text-slate-300">
+                  <span className="text-xs sm:text-sm text-slate-600">
                     para el <strong>Puesto #{rank - 1}</strong>
                     {nextRankTargetName ? ` (${nextRankTargetName})` : ""}
                   </span>
                 </div>
-                <p className="text-[11px] sm:text-xs text-slate-400 mt-1">
+                <p className="text-[11px] sm:text-xs text-slate-500 mt-1">
                   ¡Una buena puntuación en el reto semanal y adelantarás!
                 </p>
               </div>
@@ -91,29 +91,29 @@ export const PointsToNextRankCard: React.FC<PointsToNextRankCardProps> = ({
 
         {/* Comparativa y Barra de Progreso en móvil */}
         {!isLeader && (
-          <div className="w-full md:w-72 bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-2">
+          <div className="w-full md:w-72 bg-white/90 p-3 rounded-xl border border-indigo-100 shadow-2xs space-y-2">
             <div className="flex items-center justify-between text-[10px] sm:text-xs font-medium">
-              <span className="flex items-center gap-1 text-cyan-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block" />
+              <span className="flex items-center gap-1 text-sky-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-400 inline-block" />
                 Tú (#{rank}): <strong>{totalScore} pts</strong>
               </span>
-              <span className="flex items-center gap-1 text-amber-300">
+              <span className="flex items-center gap-1 text-amber-800">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
                 #{rank - 1}: <strong>{nextRankTargetScore ?? totalScore + pointsToNextRank} pts</strong>
               </span>
             </div>
 
-            {/* Barra animada */}
-            <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
+            {/* Barra animada suave */}
+            <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-amber-400 transition-all duration-1000 ease-out"
+                className="h-full rounded-full bg-gradient-to-r from-sky-300 via-indigo-300 to-amber-300 transition-all duration-1000 ease-out"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
 
-            <div className="flex items-center justify-between text-[10px] text-slate-400">
-              <span className="flex items-center gap-1 text-emerald-400 font-bold">
-                <Zap className="w-2.5 h-2.5" />
+            <div className="flex items-center justify-between text-[10px] text-slate-500">
+              <span className="flex items-center gap-1 text-emerald-700 font-bold">
+                <Zap className="w-2.5 h-2.5 text-emerald-500" />
                 {progressPercentage}% completado
               </span>
               <span>¡A tiro de piano! 🎹</span>

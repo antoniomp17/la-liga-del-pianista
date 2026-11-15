@@ -16,18 +16,18 @@ export const RulesAndCalendarModal: React.FC<RulesAndCalendarModalProps> = ({
   const [activeTab, setActiveTab] = useState<"bases" | "calendario">("bases");
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-4xl h-[90dvh] sm:h-auto sm:max-h-[85vh] bg-slate-900 border border-slate-700/80 rounded-t-3xl sm:rounded-3xl shadow-2xl text-slate-100 flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="relative w-full max-w-4xl h-[90dvh] sm:h-auto sm:max-h-[85vh] bg-white border border-slate-200 rounded-t-3xl sm:rounded-3xl shadow-2xl text-slate-800 flex flex-col overflow-hidden">
         {/* Cabecera del Modal Móvil */}
-        <div className="p-3.5 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/90 shrink-0">
+        <div className="p-3.5 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/90 shrink-0">
           <div className="min-w-0 pr-2">
-            <span className="text-[9px] sm:text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
+            <span className="text-[9px] sm:text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200 uppercase tracking-wider">
               16 Nov - Finales Junio · 28 Alumnos
             </span>
-            <h2 className="text-base sm:text-xl font-black text-white mt-1 truncate">
+            <h2 className="text-base sm:text-xl font-black text-slate-800 mt-1 truncate">
               LA LIGA DEL PIANISTA
             </h2>
-            <p className="text-[10px] sm:text-[11px] text-slate-400">
+            <p className="text-[10px] sm:text-[11px] text-slate-500">
               Bases Oficiales & Calendario de Competición
             </p>
           </div>
@@ -35,20 +35,20 @@ export const RulesAndCalendarModal: React.FC<RulesAndCalendarModalProps> = ({
           <button
             onClick={onClose}
             aria-label="Cerrar modal"
-            className="p-2 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors active:scale-95 shrink-0"
+            className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-colors active:scale-95 shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Pestañas fijas */}
-        <div className="flex border-b border-slate-800 bg-slate-950/70 px-2 sm:px-5 pt-1 gap-1 sm:gap-2 shrink-0">
+        <div className="flex border-b border-slate-100 bg-slate-50/60 px-2 sm:px-5 pt-1 gap-1 sm:gap-2 shrink-0">
           <button
             onClick={() => setActiveTab("bases")}
             className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 py-2.5 px-3 font-bold text-xs sm:text-sm border-b-2 transition-all ${
               activeTab === "bases"
-                ? "border-amber-400 text-amber-300"
-                : "border-transparent text-slate-400 hover:text-slate-200"
+                ? "border-amber-400 text-amber-800"
+                : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
             <BookOpen className="w-3.5 h-3.5 shrink-0" />
@@ -59,8 +59,8 @@ export const RulesAndCalendarModal: React.FC<RulesAndCalendarModalProps> = ({
             onClick={() => setActiveTab("calendario")}
             className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 py-2.5 px-3 font-bold text-xs sm:text-sm border-b-2 transition-all ${
               activeTab === "calendario"
-                ? "border-amber-400 text-amber-300"
-                : "border-transparent text-slate-400 hover:text-slate-200"
+                ? "border-amber-400 text-amber-800"
+                : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
             <Calendar className="w-3.5 h-3.5 shrink-0" />
@@ -73,20 +73,20 @@ export const RulesAndCalendarModal: React.FC<RulesAndCalendarModalProps> = ({
           {activeTab === "bases" && (
             <div className="space-y-3.5">
               {/* 1. Obras */}
-              <div className="bg-slate-950/70 p-3.5 sm:p-5 rounded-2xl border border-rose-500/30 shadow-md space-y-2">
+              <div className="bg-rose-50/60 p-3.5 sm:p-5 rounded-2xl border border-rose-200 shadow-xs space-y-2">
                 <div className="flex flex-wrap items-center justify-between gap-1.5">
                   <div className="flex items-center gap-2">
                     <span className="text-xl">🎼</span>
-                    <h3 className="text-sm sm:text-base font-black text-rose-300">
+                    <h3 className="text-sm sm:text-base font-black text-rose-800">
                       1. PRÁCTICA DE OBRAS (Factor ×2)
                     </h3>
                   </div>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-200">
                     2 PTS / sem estimada
                   </span>
                 </div>
 
-                <ul className="text-xs sm:text-sm text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                <ul className="text-xs sm:text-sm text-slate-600 space-y-1.5 list-disc list-inside leading-relaxed">
                   <li>
                     <strong>Dos obras simultáneas</strong> por alumno. Se fija un plazo estimado según nivel.
                   </li>
@@ -103,20 +103,20 @@ export const RulesAndCalendarModal: React.FC<RulesAndCalendarModalProps> = ({
               </div>
 
               {/* 2. Técnica */}
-              <div className="bg-slate-950/70 p-3.5 sm:p-5 rounded-2xl border border-emerald-500/30 shadow-md space-y-2">
+              <div className="bg-emerald-50/60 p-3.5 sm:p-5 rounded-2xl border border-emerald-200 shadow-xs space-y-2">
                 <div className="flex flex-wrap items-center justify-between gap-1.5">
                   <div className="flex items-center gap-2">
                     <span className="text-xl">🛠️</span>
-                    <h3 className="text-sm sm:text-base font-black text-emerald-300">
+                    <h3 className="text-sm sm:text-base font-black text-emerald-800">
                       2. TÉCNICA SEMANAL (Todas las semanas)
                     </h3>
                   </div>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
                     Máx 2 PTS/sem
                   </span>
                 </div>
 
-                <ul className="text-xs sm:text-sm text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                <ul className="text-xs sm:text-sm text-slate-600 space-y-1.5 list-disc list-inside leading-relaxed">
                   <li>
                     Cada semana: <strong>2 ejercicios pequeños</strong> adaptados a tu nivel.
                   </li>
@@ -130,54 +130,54 @@ export const RulesAndCalendarModal: React.FC<RulesAndCalendarModalProps> = ({
               </div>
 
               {/* 3. Retos Rotativos */}
-              <div className="bg-slate-950/70 p-3.5 sm:p-5 rounded-2xl border border-cyan-500/30 shadow-md space-y-2.5">
+              <div className="bg-sky-50/60 p-3.5 sm:p-5 rounded-2xl border border-sky-200 shadow-xs space-y-2.5">
                 <div className="flex flex-wrap items-center justify-between gap-1.5">
                   <div className="flex items-center gap-2">
                     <span className="text-xl">🔄</span>
-                    <h3 className="text-sm sm:text-base font-black text-cyan-300">
+                    <h3 className="text-sm sm:text-base font-black text-sky-900">
                       3. RETOS DE LECTURA (Semanas Alternas)
                     </h3>
                   </div>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 border border-sky-200">
                     Hasta 4 PTS/sem
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-1">
                   {/* Reto Ritmo */}
-                  <div className="p-3 rounded-xl bg-slate-900 border border-amber-500/30 space-y-1">
+                  <div className="p-3 rounded-xl bg-amber-50/60 border border-amber-200 space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="text-base">🥁</span>
-                      <h4 className="font-bold text-amber-300 text-xs sm:text-sm">
+                      <h4 className="font-bold text-amber-900 text-xs sm:text-sm">
                         A) Semana de Ritmo (Semanas Impares)
                       </h4>
                     </div>
-                    <p className="text-xs text-slate-300 leading-relaxed">
+                    <p className="text-xs text-slate-600 leading-relaxed">
                       <strong>4 ejercicios rítmicos</strong> al azar con cambio de clave. <strong>1 pt por ejercicio</strong> (hasta 4 pts).
                     </p>
-                    <div className="mt-1.5 p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[10px] text-amber-300 flex items-center gap-1 font-semibold">
-                      <Sparkles className="w-3 h-3 shrink-0" />
+                    <div className="mt-1.5 p-1.5 rounded-lg bg-amber-100/70 border border-amber-200 text-[10px] text-amber-800 flex items-center gap-1 font-semibold">
+                      <Sparkles className="w-3 h-3 shrink-0 text-amber-600" />
                       <span>1 comodín semanal para repetir un ejercicio fallado.</span>
                     </div>
                   </div>
 
                   {/* Reto Notas */}
-                  <div className="p-3 rounded-xl bg-slate-900 border border-cyan-500/30 space-y-1">
+                  <div className="p-3 rounded-xl bg-sky-50/60 border border-sky-200 space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="text-base">🎼</span>
-                      <h4 className="font-bold text-cyan-300 text-xs sm:text-sm">
+                      <h4 className="font-bold text-sky-900 text-xs sm:text-sm">
                         B) Lectura de Notas / Claves (Semanas Pares)
                       </h4>
                     </div>
-                    <p className="text-xs text-slate-300 leading-relaxed">
+                    <p className="text-xs text-slate-600 leading-relaxed">
                       <strong>4 líneas alternando claves</strong> con tiempo límite según nivel:
                       <br />
                       • Iniciación: 20s · Intermedio: 15s · Avanzado: 10s.
                       <br />
                       0,5 pts/línea (máx 2 pts/sem).
                     </p>
-                    <div className="mt-1.5 p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-[10px] text-cyan-300 flex items-center gap-1 font-semibold">
-                      <Sparkles className="w-3 h-3 shrink-0" />
+                    <div className="mt-1.5 p-1.5 rounded-lg bg-sky-100/70 border border-sky-200 text-[10px] text-sky-800 flex items-center gap-1 font-semibold">
+                      <Sparkles className="w-3 h-3 shrink-0 text-sky-600" />
                       <span>1 comodín semanal para repetir una línea fallada.</span>
                     </div>
                   </div>
@@ -188,12 +188,12 @@ export const RulesAndCalendarModal: React.FC<RulesAndCalendarModalProps> = ({
 
           {activeTab === "calendario" && (
             <div className="space-y-2.5">
-              <div className="flex items-center justify-between text-[11px] text-slate-400">
+              <div className="flex items-center justify-between text-[11px] text-slate-500">
                 <span>Calendario oficial de 27 semanas</span>
-                <span className="text-amber-400 font-bold">Semana Actual: #{currentWeek}</span>
+                <span className="text-amber-800 font-bold">Semana Actual: #{currentWeek}</span>
               </div>
 
-              <div className="divide-y divide-slate-800 border border-slate-800 rounded-2xl overflow-hidden bg-slate-950/60">
+              <div className="divide-y divide-slate-100 border border-slate-200 rounded-2xl overflow-hidden bg-white">
                 {OFFICIAL_CALENDAR.map((cal) => {
                   const isCurrent = cal.weekNumber === currentWeek;
                   const isRitmo = cal.challengeType === "ritmo";
@@ -203,38 +203,38 @@ export const RulesAndCalendarModal: React.FC<RulesAndCalendarModalProps> = ({
                       key={cal.weekNumber}
                       className={`p-2.5 sm:p-3 flex items-center justify-between gap-2 transition-colors ${
                         isCurrent
-                          ? "bg-amber-500/15 border-l-4 border-amber-400"
-                          : "hover:bg-slate-900/60"
+                          ? "bg-amber-50/90 border-l-4 border-amber-400"
+                          : "hover:bg-slate-50"
                       }`}
                     >
                       <div className="flex items-center gap-2 min-w-0">
                         <span
                           className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg font-mono font-bold text-[11px] sm:text-xs flex items-center justify-center shrink-0 ${
                             isCurrent
-                              ? "bg-amber-400 text-slate-950"
-                              : "bg-slate-800 text-slate-300"
+                              ? "bg-amber-200 text-amber-900"
+                              : "bg-slate-100 text-slate-600"
                           }`}
                         >
                           S{cal.weekNumber}
                         </span>
                         <div className="min-w-0">
-                          <p className="font-bold text-xs text-slate-200 truncate flex items-center gap-1.5">
+                          <p className="font-bold text-xs text-slate-800 truncate flex items-center gap-1.5">
                             <span>{cal.dates}</span>
                             {isCurrent && (
-                              <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-950 uppercase shrink-0">
+                              <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-amber-200 text-amber-900 uppercase shrink-0">
                                 En curso
                               </span>
                             )}
                           </p>
-                          <p className="text-[10px] text-slate-400 truncate">{cal.challengeTitle}</p>
+                          <p className="text-[10px] text-slate-500 truncate">{cal.challengeTitle}</p>
                         </div>
                       </div>
 
                       <span
                         className={`text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 border ${
                           isRitmo
-                            ? "bg-amber-500/10 text-amber-300 border-amber-500/20"
-                            : "bg-cyan-500/10 text-cyan-300 border-cyan-500/20"
+                            ? "bg-amber-100 text-amber-800 border-amber-200"
+                            : "bg-sky-100 text-sky-800 border-sky-200"
                         }`}
                       >
                         {isRitmo ? "🥁 Ritmo (4 pts)" : "🎼 Claves (2 pts)"}
@@ -244,24 +244,24 @@ export const RulesAndCalendarModal: React.FC<RulesAndCalendarModalProps> = ({
                 })}
 
                 {/* Parón de Semana Santa */}
-                <div className="p-3 bg-indigo-950/30 border-y border-indigo-500/20 flex items-center gap-2 text-indigo-300 text-xs">
+                <div className="p-3 bg-indigo-50/70 border-y border-indigo-100 flex items-center gap-2 text-indigo-900 text-xs">
                   <span className="text-base shrink-0">✝️</span>
                   <div>
                     <span className="font-bold">22 mar - 29 mar: Semana Santa</span>
-                    <span className="text-indigo-400/80 block text-[10px]">
+                    <span className="text-indigo-700 block text-[10px]">
                       Pausa de retos · Continúa práctica en casa
                     </span>
                   </div>
                 </div>
 
                 {/* Gran Final */}
-                <div className="p-3 bg-gradient-to-r from-amber-500/20 via-slate-900 to-amber-500/10 flex items-center gap-2.5 border-t-2 border-amber-400">
+                <div className="p-3 bg-gradient-to-r from-amber-100/80 via-amber-50 to-orange-50 flex items-center gap-2.5 border-t-2 border-amber-400">
                   <span className="text-xl shrink-0">🏆</span>
                   <div>
-                    <p className="font-black text-xs sm:text-sm text-amber-300">
+                    <p className="font-black text-xs sm:text-sm text-amber-900">
                       GRAN FINAL: 22 jun - 27 jun
                     </p>
-                    <p className="text-[10px] text-slate-300">
+                    <p className="text-[10px] text-slate-600">
                       Recuento final y entrega de premios oficiales
                     </p>
                   </div>
@@ -272,10 +272,10 @@ export const RulesAndCalendarModal: React.FC<RulesAndCalendarModalProps> = ({
         </div>
 
         {/* Botón cerrar inferior adaptado a móvil */}
-        <div className="p-3 bg-slate-950 border-t border-slate-800 flex justify-end shrink-0">
+        <div className="p-3 bg-slate-50 border-t border-slate-100 flex justify-end shrink-0">
           <button
             onClick={onClose}
-            className="w-full sm:w-auto py-2.5 px-6 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm transition-colors active:scale-95 text-center cursor-pointer shadow-md"
+            className="w-full sm:w-auto py-2.5 px-6 rounded-xl bg-gradient-to-r from-amber-300 to-rose-200 hover:from-amber-200 hover:to-rose-300 text-slate-800 font-bold text-xs sm:text-sm border border-amber-200/60 transition-colors active:scale-95 text-center cursor-pointer shadow-xs"
           >
             Cerrar Bases
           </button>

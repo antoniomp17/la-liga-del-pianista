@@ -254,12 +254,12 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-sm sm:max-w-md max-h-[92dvh] overflow-y-auto bg-slate-900 border border-slate-700/80 rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="relative w-full max-w-sm sm:max-w-md max-h-[92dvh] overflow-y-auto bg-white border border-slate-200 rounded-3xl p-4 sm:p-6 shadow-2xl text-slate-800">
         {/* Botón cerrar */}
         <button
           onClick={onClose}
-          className="absolute top-3.5 right-3.5 p-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
+          className="absolute top-3.5 right-3.5 p-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
@@ -268,15 +268,15 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
         <div className="text-center pt-1 pb-2">
           {rankChange > 0 ? (
             <div>
-              <div className="inline-flex p-3 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 mb-2 animate-bounce">
+              <div className="inline-flex p-3 rounded-2xl bg-emerald-100 text-emerald-700 border border-emerald-200 mb-2 animate-bounce shadow-2xs">
                 <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10" />
               </div>
-              <h3 className="text-xl sm:text-2xl font-black text-emerald-300">
+              <h3 className="text-xl sm:text-2xl font-black text-emerald-800">
                 ¡Subiste de Puesto! 🚀
               </h3>
-              <p className="text-xs sm:text-sm text-slate-300 mt-1.5 px-1">
+              <p className="text-xs sm:text-sm text-slate-600 mt-1.5 px-1">
                 ¡Enhorabuena, <strong>{name}</strong>! Has ascendido{" "}
-                <span className="font-bold text-emerald-400">
+                <span className="font-bold text-emerald-700">
                   +{rankChange} {rankChange === 1 ? "posición" : "posiciones"}
                 </span>{" "}
                 esta semana y ahora estás en el <strong>Puesto #{rank}</strong>.
@@ -284,35 +284,35 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
             </div>
           ) : rankChange < 0 ? (
             <div>
-              <div className="inline-flex p-3 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-400 mb-2">
+              <div className="inline-flex p-3 rounded-2xl bg-rose-100 text-rose-700 border border-rose-200 mb-2 shadow-2xs">
                 <TrendingDown className="w-8 h-8 sm:w-10 sm:h-10" />
               </div>
-              <h3 className="text-xl sm:text-2xl font-black text-rose-300">
+              <h3 className="text-xl sm:text-2xl font-black text-rose-800">
                 ¡Cambio de Posición! 💡
               </h3>
-              <p className="text-xs sm:text-sm text-slate-300 mt-1.5 px-1">
+              <p className="text-xs sm:text-sm text-slate-600 mt-1.5 px-1">
                 ¡Ánimo, <strong>{name}</strong>! Esta semana estás en el{" "}
                 <strong>Puesto #{rank}</strong> (has bajado {Math.abs(rankChange)}{" "}
                 {Math.abs(rankChange) === 1 ? "puesto" : "puestos"}).
               </p>
-              <div className="mt-2.5 p-2.5 rounded-xl bg-slate-800/80 border border-indigo-500/30 text-xs text-indigo-300">
+              <div className="mt-2.5 p-2.5 rounded-xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-900">
                 ¡Estás a solo <strong>{pointsToNextRank} puntos</strong> de volver a subir! A por todas en la siguiente prueba. 🎹
               </div>
             </div>
           ) : (
             <div>
-              <div className="inline-flex p-3 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-400 mb-2">
+              <div className="inline-flex p-3 rounded-2xl bg-amber-100 text-amber-800 border border-amber-200 mb-2 shadow-2xs">
                 <Sparkles className="w-8 h-8 sm:w-10 sm:h-10" />
               </div>
-              <h3 className="text-xl sm:text-2xl font-black text-amber-300">
+              <h3 className="text-xl sm:text-2xl font-black text-amber-900">
                 ¡Ritmo Firme y Constante! 🎯
               </h3>
-              <p className="text-xs sm:text-sm text-slate-300 mt-1.5 px-1">
+              <p className="text-xs sm:text-sm text-slate-600 mt-1.5 px-1">
                 ¡Buen trabajo, <strong>{name}</strong>! Mantienes tu sólida posición en el{" "}
                 <strong>Puesto #{rank}</strong>.
               </p>
               {rank > 1 && (
-                <p className="text-xs text-slate-400 mt-1.5">
+                <p className="text-xs text-slate-500 mt-1.5">
                   Te faltan solo <strong>{pointsToNextRank} pts</strong> para alcanzar el Puesto #{rank - 1}.
                 </p>
               )}
@@ -321,50 +321,50 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
         </div>
 
         {/* Sección de Notificaciones Push Web Automáticas */}
-        <div className="mt-3 p-3.5 sm:p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-2.5">
+        <div className="mt-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50/80 border border-slate-200 space-y-2.5">
           <div className="flex items-center gap-2">
-            <Bell className="w-4 h-4 text-amber-400 shrink-0" />
-            <h4 className="text-xs sm:text-sm font-bold text-slate-200">
+            <Bell className="w-4 h-4 text-amber-600 shrink-0" />
+            <h4 className="text-xs sm:text-sm font-bold text-slate-800">
               Avisos automáticos al móvil
             </h4>
           </div>
 
-          <p className="text-[11px] text-slate-400 leading-relaxed">
+          <p className="text-[11px] text-slate-500 leading-relaxed">
             Recibe un aviso nativo en tu pantalla en cuanto la profesora publique notas, <strong>incluso con el móvil bloqueado o el navegador cerrado</strong>.
           </p>
 
           {/* GUÍA VISUAL PASO A PASO PARA IPHONE / IPAD */}
           {isIOSWithoutPWA ? (
-            <div className="p-3 rounded-2xl bg-indigo-950/50 border border-indigo-500/30 text-indigo-200 space-y-2">
-              <div className="flex items-center gap-1.5 font-bold text-xs text-indigo-300">
-                <Smartphone className="w-4 h-4 text-indigo-400 shrink-0" />
+            <div className="p-3 rounded-2xl bg-indigo-50/80 border border-indigo-200 text-indigo-950 space-y-2">
+              <div className="flex items-center gap-1.5 font-bold text-xs text-indigo-900">
+                <Smartphone className="w-4 h-4 text-indigo-600 shrink-0" />
                 <span>¿Estás en iPhone? Solo 2 pasos rápidos:</span>
               </div>
-              <ol className="text-[11px] space-y-1.5 pl-1 text-slate-300">
+              <ol className="text-[11px] space-y-1.5 pl-1 text-slate-700">
                 <li className="flex items-start gap-1.5">
-                  <span className="font-bold text-indigo-400 shrink-0">1.</span>
+                  <span className="font-bold text-indigo-600 shrink-0">1.</span>
                   <span>
                     Pulsa abajo en Safari el botón <strong>Compartir</strong>{" "}
-                    <Share2 className="w-3.5 h-3.5 inline text-indigo-400" /> (cuadrado con flecha).
+                    <Share2 className="w-3.5 h-3.5 inline text-indigo-600" /> (cuadrado con flecha).
                   </span>
                 </li>
                 <li className="flex items-start gap-1.5">
-                  <span className="font-bold text-indigo-400 shrink-0">2.</span>
+                  <span className="font-bold text-indigo-600 shrink-0">2.</span>
                   <span>
                     Baja un poco y pulsa{" "}
-                    <strong className="text-white">"Añadir a pantalla de inicio"</strong>{" "}
-                    <PlusSquare className="w-3.5 h-3.5 inline text-indigo-400" />.
+                    <strong className="text-slate-900">"Añadir a pantalla de inicio"</strong>{" "}
+                    <PlusSquare className="w-3.5 h-3.5 inline text-indigo-600" />.
                   </span>
                 </li>
                 <li className="flex items-start gap-1.5">
-                  <span className="font-bold text-indigo-400 shrink-0">3.</span>
+                  <span className="font-bold text-indigo-600 shrink-0">3.</span>
                   <span>
                     Abre el nuevo icono de <strong>"Liga Pianista"</strong> desde tu móvil y pulsa{" "}
                     <em>"Permitir avisos"</em>. ¡Y listo!
                   </span>
                 </li>
               </ol>
-              <p className="text-[10px] text-indigo-300/80 italic pt-0.5">
+              <p className="text-[10px] text-indigo-700 italic pt-0.5">
                 (Apple exige esto por seguridad para poder notificarte con la pantalla apagada).
               </p>
             </div>
@@ -373,8 +373,8 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
             <div>
               {pushStatus === "granted" ? (
                 <div className="space-y-2 pt-1">
-                  <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20 px-3 py-2 rounded-xl">
-                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <div className="flex items-center gap-1.5 text-xs text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-xl">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>¡Avisos automáticos activos en este teléfono!</span>
                   </div>
 
@@ -382,36 +382,36 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
                   <button
                     onClick={handleTestPush}
                     disabled={isTestingPush}
-                    className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-amber-300 border border-amber-500/30 hover:border-amber-400 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 disabled:opacity-50"
+                    className="w-full py-2 px-3 rounded-xl bg-white hover:bg-amber-50 text-xs font-semibold text-amber-800 border border-amber-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 disabled:opacity-50 shadow-2xs"
                   >
                     {isTestingPush ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-600" />
                     ) : (
-                      <Send className="w-3.5 h-3.5 text-amber-400" />
+                      <Send className="w-3.5 h-3.5 text-amber-600" />
                     )}
                     <span>Probar notificación en mi pantalla ahora</span>
                   </button>
 
                   {testPushFeedback && (
-                    <p className="text-[11px] text-amber-300 text-center font-medium animate-in fade-in">
+                    <p className="text-[11px] text-amber-800 text-center font-medium animate-in fade-in">
                       {testPushFeedback}
                     </p>
                   )}
                 </div>
               ) : pushStatus === "denied" ? (
-                <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-[11px]">
+                <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-[11px]">
                   ⚠️ Las notificaciones están bloqueadas en tu navegador. Toca el icono del candado 🔒 junto a la dirección web y activa los permisos de notificación.
                 </div>
               ) : (
                 <button
                   onClick={handleRequestPush}
                   disabled={isSubscribing}
-                  className="w-full mt-1 py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm shadow-md shadow-amber-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
+                  className="w-full mt-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-300 via-rose-200 to-pink-200 hover:from-amber-200 hover:to-pink-300 text-slate-800 font-bold text-xs sm:text-sm shadow-md shadow-rose-200/50 border border-amber-200/60 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
                 >
                   {isSubscribing ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    <Bell className="w-4 h-4 fill-slate-950" />
+                    <Bell className="w-4 h-4 fill-slate-800" />
                   )}
                   <span>Activar Avisos en mi Móvil (1 Clic)</span>
                 </button>
@@ -423,7 +423,7 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
         {/* Botón Aceptar */}
         <button
           onClick={onClose}
-          className="w-full mt-4 py-2.5 sm:py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm border border-slate-700 shadow-lg transition-all cursor-pointer active:scale-95"
+          className="w-full mt-4 py-2.5 sm:py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs sm:text-sm border border-slate-200 shadow-2xs transition-all cursor-pointer active:scale-95"
         >
           ¡Entendido, ver clasificación!
         </button>

@@ -27,7 +27,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#020617",
+  themeColor: "#faf8f5",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
-      <body className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">{children}</body>
+      <body className="min-h-screen bg-[#faf8f5] text-slate-800 flex flex-col">{children}</body>
     </html>
   );
 }

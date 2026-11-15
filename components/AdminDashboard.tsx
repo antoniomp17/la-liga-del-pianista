@@ -416,20 +416,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   if (!isAuthenticated) {
     return (
-      <div className="max-w-md mx-auto my-3 sm:my-10 p-4 sm:p-8 bg-slate-900/95 rounded-3xl border border-slate-800 shadow-2xl text-slate-100">
+      <div className="max-w-md mx-auto my-3 sm:my-10 p-4 sm:p-8 bg-white/95 rounded-3xl border border-purple-100 shadow-xl shadow-purple-900/5 text-slate-800">
         <div className="text-center mb-5">
-          <div className="inline-flex p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 mb-2.5 shadow-inner">
+          <div className="inline-flex p-3 rounded-2xl bg-purple-100/80 border border-purple-200 text-purple-700 mb-2.5 shadow-xs">
             <Lock className="w-7 h-7 sm:w-8 sm:h-8" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-white">Panel de Profesora</h2>
-          <p className="text-xs text-slate-400 mt-1 max-w-xs mx-auto">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-800">Panel de Profesora</h2>
+          <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
             Gestión oficial de semanas, notas, obras, técnica y retos.
           </p>
         </div>
 
         <form onSubmit={handleAdminLogin} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider text-center">
+            <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wider text-center">
               Contraseña / PIN Maestro
             </label>
             <input
@@ -438,12 +438,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               onChange={(e) => setAdminPin(e.target.value)}
               placeholder="Introduce tu PIN maestro"
               suppressHydrationWarning
-              className="w-full text-center text-lg sm:text-xl font-mono tracking-wider py-3 px-4 bg-slate-950 rounded-xl border border-slate-700 text-indigo-300 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full text-center text-lg sm:text-xl font-mono tracking-wider py-3 px-4 bg-purple-50/30 rounded-xl border border-purple-200 text-purple-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-300 shadow-inner"
             />
           </div>
 
           {loginError && (
-            <div className="p-2.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs text-center font-medium">
+            <div className="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs text-center font-medium">
               {loginError}
             </div>
           )}
@@ -451,7 +451,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <button
             type="submit"
             disabled={isLoading || !adminPin.trim()}
-            className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 active:scale-95 text-sm"
+            className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold rounded-xl shadow-md shadow-purple-200 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 active:scale-95 text-sm"
           >
             {isLoading ? "Entrando..." : "Acceder al Panel"}
           </button>
@@ -477,14 +477,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   );
 
   return (
-    <div className="max-w-5xl mx-auto my-2 sm:my-6 px-1 sm:px-4 text-slate-100 pb-20 sm:pb-8">
+    <div className="max-w-5xl mx-auto my-2 sm:my-6 px-1 sm:px-4 text-slate-800 pb-20 sm:pb-8">
       {/* Barra de navegación de pestañas (Mobile First & Anti-Colapso) */}
-      <div className="bg-slate-900/95 rounded-2xl border border-slate-800 p-2 sm:p-2.5 mb-3 sm:mb-6 shadow-xl space-y-2 sm:space-y-0 sm:flex sm:items-center sm:justify-between sm:gap-2">
+      <div className="bg-white/95 rounded-2xl border border-slate-200/90 p-2 sm:p-2.5 mb-3 sm:mb-6 shadow-xs space-y-2 sm:space-y-0 sm:flex sm:items-center sm:justify-between sm:gap-2">
         {/* Cabecera superior en móvil: Indicador del modo y botones de Bases / Salir */}
-        <div className="flex items-center justify-between gap-2 sm:hidden border-b border-slate-800/80 pb-2">
+        <div className="flex items-center justify-between gap-2 sm:hidden border-b border-slate-100 pb-2">
           <div className="flex items-center gap-1.5 min-w-0">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-            <span className="text-[11px] font-black tracking-wider uppercase text-slate-300 truncate">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            <span className="text-[11px] font-black tracking-wider uppercase text-slate-700 truncate">
               Panel Profesora
             </span>
           </div>
@@ -495,7 +495,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 type="button"
                 onClick={onOpenRules}
                 title="Ver Bases Oficiales"
-                className="py-1 px-2.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-bold hover:bg-amber-500/25 transition-colors flex items-center gap-1 cursor-pointer"
+                className="py-1 px-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-bold hover:bg-amber-100/70 transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
               >
                 <span>📜 Bases</span>
               </button>
@@ -505,22 +505,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               type="button"
               onClick={handleLogoutAdmin}
               title="Cerrar sesión"
-              className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-700 transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-700 border border-slate-200 transition-colors cursor-pointer"
             >
-              <LogOut className="w-3.5 h-3.5 text-rose-400" />
+              <LogOut className="w-3.5 h-3.5 text-rose-500" />
             </button>
           </div>
         </div>
 
         {/* 4 Pestañas al 100% de ancho en móvil, sin compresión ni desbordamiento */}
-        <div className="w-full sm:w-auto grid grid-cols-4 sm:flex gap-1 sm:gap-1.5 bg-slate-950/70 sm:bg-transparent p-1 sm:p-0 rounded-xl border border-slate-800/80 sm:border-0">
+        <div className="w-full sm:w-auto grid grid-cols-4 sm:flex gap-1 sm:gap-1.5 bg-slate-50 sm:bg-transparent p-1 sm:p-0 rounded-xl border border-slate-200/80 sm:border-0">
           <button
             type="button"
             onClick={() => setActiveTab("scores")}
             className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 py-2 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition-all cursor-pointer ${
               activeTab === "scores"
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-black"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/60 font-semibold"
+                ? "bg-purple-100 text-purple-900 shadow-2xs font-black border border-purple-200"
+                : "text-slate-500 hover:text-slate-800 hover:bg-slate-100 font-semibold"
             }`}
           >
             <Edit3 className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0" />
@@ -532,8 +532,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             onClick={() => setActiveTab("ranking")}
             className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 py-2 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition-all cursor-pointer ${
               activeTab === "ranking"
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-black"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/60 font-semibold"
+                ? "bg-purple-100 text-purple-900 shadow-2xs font-black border border-purple-200"
+                : "text-slate-500 hover:text-slate-800 hover:bg-slate-100 font-semibold"
             }`}
           >
             <Trophy className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0" />
@@ -545,8 +545,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             onClick={() => setActiveTab("students")}
             className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 py-2 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition-all cursor-pointer ${
               activeTab === "students"
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-black"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/60 font-semibold"
+                ? "bg-purple-100 text-purple-900 shadow-2xs font-black border border-purple-200"
+                : "text-slate-500 hover:text-slate-800 hover:bg-slate-100 font-semibold"
             }`}
           >
             <Users className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0" />
@@ -558,8 +558,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             onClick={() => setActiveTab("settings")}
             className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 py-2 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition-all cursor-pointer ${
               activeTab === "settings"
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-black"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/60 font-semibold"
+                ? "bg-purple-100 text-purple-900 shadow-2xs font-black border border-purple-200"
+                : "text-slate-500 hover:text-slate-800 hover:bg-slate-100 font-semibold"
             }`}
           >
             <Settings className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0" />
@@ -574,7 +574,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               type="button"
               onClick={onOpenRules}
               title="Ver Bases Oficiales"
-              className="py-1.5 px-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold hover:bg-amber-500/25 transition-colors flex items-center gap-1 cursor-pointer"
+              className="py-1.5 px-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold hover:bg-amber-100/70 transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
             >
               <span>📜 Bases</span>
             </button>
@@ -584,9 +584,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             type="button"
             onClick={handleLogoutAdmin}
             title="Cerrar sesión"
-            className="p-2 rounded-xl bg-slate-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-700 transition-colors cursor-pointer"
+            className="p-2 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-700 border border-slate-200 transition-colors cursor-pointer"
           >
-            <LogOut className="w-3.5 h-3.5 text-rose-400" />
+            <LogOut className="w-3.5 h-3.5 text-rose-500" />
           </button>
         </div>
       </div>
@@ -595,26 +595,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       {activeTab === "scores" && (
         <div className="space-y-3 sm:space-y-4">
           {/* Cabecera con selector de semana */}
-          <div className="bg-slate-900/95 rounded-2xl border border-slate-800 p-3 sm:p-5 shadow-xl space-y-2.5">
+          <div className="bg-white/95 rounded-2xl border border-slate-200/90 p-3 sm:p-5 shadow-xs space-y-2.5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div>
                 <div className="flex items-center gap-2">
-                  <Edit3 className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 shrink-0" />
-                  <h3 className="text-base sm:text-lg font-black text-white">
+                  <Edit3 className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 shrink-0" />
+                  <h3 className="text-base sm:text-lg font-black text-slate-800">
                     Semana {selectedWeek}: {currentCalInfo?.dates || "Fechas oficiales"}
                   </h3>
                 </div>
                 <div className="mt-1 flex flex-wrap items-center gap-1.5">
                   <span
-                    className={`text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full border ${
+                    className={`text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full border ${
                       isOddWeek
-                        ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
-                        : "bg-cyan-500/15 text-cyan-300 border-cyan-500/30"
+                        ? "bg-amber-100 text-amber-800 border-amber-200"
+                        : "bg-sky-100 text-sky-800 border-sky-200"
                     }`}
                   >
                     {isOddWeek ? "🥁 Reto: Ritmo (Máx 4 pts)" : "🎼 Reto: Claves (Máx 2 pts)"}
                   </span>
-                  <span className="text-[10px] sm:text-xs text-slate-400">
+                  <span className="text-[10px] sm:text-xs text-slate-500">
                     + Obras (×2) + Técnica (Máx 2)
                   </span>
                 </div>
@@ -622,12 +622,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
               {/* Selector de Semanas 1 a 27 y fijar semana activa */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
-                <div className="flex items-center gap-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800 w-full sm:w-auto">
-                  <span className="text-xs font-semibold text-slate-400 px-1 shrink-0">Semana:</span>
+                <div className="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded-xl border border-slate-200 w-full sm:w-auto shadow-2xs">
+                  <span className="text-xs font-semibold text-slate-500 px-1 shrink-0">Semana:</span>
                   <select
                     value={selectedWeek}
                     onChange={(e) => handleWeekChange(Number(e.target.value))}
-                    className="bg-slate-900 text-amber-300 font-mono text-xs font-bold py-1.5 px-2.5 rounded-lg border border-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer w-full"
+                    className="bg-white text-amber-800 font-mono text-xs font-bold py-1.5 px-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-amber-400 cursor-pointer w-full"
                   >
                     {OFFICIAL_CALENDAR.map((cal) => (
                       <option key={cal.weekNumber} value={cal.weekNumber}>
@@ -638,9 +638,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
 
                 {settings && (
-                  <div className="flex items-center justify-between sm:justify-start gap-1.5 bg-slate-950/80 px-2 py-1.5 rounded-xl border border-slate-800 shrink-0">
-                    <span className="text-[10px] text-slate-400">Oficial:</span>
-                    <span className="text-[11px] font-bold font-mono text-amber-300 bg-amber-500/15 px-1.5 py-0.5 rounded border border-amber-500/30">
+                  <div className="flex items-center justify-between sm:justify-start gap-1.5 bg-slate-50/80 px-2 py-1.5 rounded-xl border border-slate-200 shrink-0">
+                    <span className="text-[10px] text-slate-500">Oficial:</span>
+                    <span className="text-[11px] font-bold font-mono text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded border border-amber-200">
                       Sem. {settings.currentWeek}
                     </span>
                     {selectedWeek !== settings.currentWeek && (
@@ -648,7 +648,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         type="button"
                         onClick={() => handleSetOfficialWeek(selectedWeek)}
                         disabled={isLoading}
-                        className="text-[10px] font-bold px-2 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                        className="text-[10px] font-bold px-2 py-1 rounded-lg bg-purple-600 hover:bg-purple-700 text-white transition-all cursor-pointer active:scale-95 disabled:opacity-50 shadow-2xs"
                         title="Hacer que esta semana sea la activa oficial para todos los alumnos"
                       >
                         Fijar Sem. {selectedWeek} como Oficial
@@ -660,24 +660,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
 
             {/* Barra de Búsqueda y Conmutador de vista Tarjetas/Tabla en móvil */}
-            <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
               <div className="relative flex-1">
-                <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Buscar alumno..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-8 pr-2.5 py-1.5 bg-slate-950 rounded-xl border border-slate-700 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full pl-8 pr-2.5 py-1.5 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-purple-300"
                 />
               </div>
 
-              <div className="flex items-center bg-slate-950 p-0.5 rounded-xl border border-slate-800 shrink-0">
+              <div className="flex items-center bg-slate-50 p-0.5 rounded-xl border border-slate-200 shrink-0 shadow-2xs">
                 <button
                   type="button"
                   onClick={() => setMobileScoresView("cards")}
                   className={`flex items-center gap-1 py-1 px-2 rounded-lg text-xs font-semibold transition-colors ${
-                    mobileScoresView === "cards" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
+                    mobileScoresView === "cards" ? "bg-white text-purple-900 shadow-xs border border-purple-100" : "text-slate-500 hover:text-slate-800"
                   }`}
                   title="Vista Tarjetas (Táctil)"
                 >
@@ -688,7 +688,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   type="button"
                   onClick={() => setMobileScoresView("table")}
                   className={`flex items-center gap-1 py-1 px-2 rounded-lg text-xs font-semibold transition-colors ${
-                    mobileScoresView === "table" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
+                    mobileScoresView === "table" ? "bg-white text-purple-900 shadow-xs border border-purple-100" : "text-slate-500 hover:text-slate-800"
                   }`}
                   title="Vista Tabla (Spreadsheet)"
                 >
@@ -701,8 +701,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
           {/* Confirmación al guardar */}
           {saveSuccessMessage && (
-            <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs sm:text-sm font-semibold flex items-center gap-2 animate-in fade-in">
-              <CheckCircle2 className="w-4 h-4 shrink-0" />
+            <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm font-semibold flex items-center gap-2 animate-in fade-in">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
               <span>{saveSuccessMessage}</span>
             </div>
           )}
@@ -722,24 +722,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 return (
                   <div
                     key={student.id}
-                    className="bg-slate-900/95 rounded-2xl border border-slate-800 p-3 shadow-md space-y-2.5"
+                    className="bg-white rounded-2xl border border-slate-200/90 p-3 shadow-xs space-y-2.5"
                   >
                     {/* Cabecera del alumno */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 min-w-0">
                         <span className="text-xl shrink-0">{student.avatar}</span>
                         <div className="min-w-0">
-                          <p className="font-bold text-xs sm:text-sm text-slate-100 truncate">
+                          <p className="font-bold text-xs sm:text-sm text-slate-800 truncate">
                             {student.name}
                           </p>
-                          <p className="text-[10px] text-slate-400 font-mono">
-                            PIN: <span className="text-amber-300 font-bold">{student.pin}</span> · {student.level || "Intermedio"}
+                          <p className="text-[10px] text-slate-500 font-mono">
+                            PIN: <span className="text-amber-700 font-bold">{student.pin}</span> · {student.level || "Intermedio"}
                           </p>
                         </div>
                       </div>
 
                       <div className="text-right shrink-0">
-                        <span className="text-sm font-black font-mono text-amber-400">
+                        <span className="text-sm font-black font-mono text-amber-700">
                           {weekTotal} pts
                         </span>
                         <span className="text-[9px] text-slate-400 block">Total Sem.</span>
@@ -747,14 +747,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     </div>
 
                     {/* Entradas táctiles de notas adaptadas a móvil y escritorio */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 pt-2 border-t border-slate-800/80">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 pt-2 border-t border-slate-100">
                       {/* Obras (Factor x2 con botones de paso rápido +2 / -2) */}
-                      <div className="bg-slate-950/80 p-2 rounded-xl border border-rose-500/20">
+                      <div className="bg-rose-50/60 p-2 rounded-xl border border-rose-200">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] font-bold text-rose-300">
+                          <span className="text-[10px] font-bold text-rose-800">
                             🎼 Obras (×2)
                           </span>
-                          <span className="text-[10px] font-mono font-bold text-rose-400">
+                          <span className="text-[10px] font-mono font-bold text-rose-700">
                             {sObras} pts
                           </span>
                         </div>
@@ -769,7 +769,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 [student.id]: { ...prev[student.id], obras: next === 0 ? "" : next },
                               }));
                             }}
-                            className="w-7 h-7 rounded-lg bg-slate-900 hover:bg-slate-800 text-rose-300 border border-slate-700 font-bold text-xs flex items-center justify-center shrink-0 active:scale-95 cursor-pointer"
+                            className="w-7 h-7 rounded-lg bg-white hover:bg-rose-100 text-rose-800 border border-rose-200 font-bold text-xs flex items-center justify-center shrink-0 active:scale-95 cursor-pointer shadow-2xs"
                           >
                             -2
                           </button>
@@ -787,7 +787,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               }));
                             }}
                             placeholder="0"
-                            className="w-full text-center py-1 bg-slate-900 rounded-lg border border-slate-700 text-rose-300 font-mono text-xs font-bold"
+                            className="w-full text-center py-1 bg-white rounded-lg border border-rose-200 text-rose-800 font-mono text-xs font-bold"
                           />
                           <button
                             type="button"
@@ -799,7 +799,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 [student.id]: { ...prev[student.id], obras: next },
                               }));
                             }}
-                            className="w-7 h-7 rounded-lg bg-slate-900 hover:bg-slate-800 text-rose-300 border border-slate-700 font-bold text-xs flex items-center justify-center shrink-0 active:scale-95 cursor-pointer"
+                            className="w-7 h-7 rounded-lg bg-white hover:bg-rose-100 text-rose-800 border border-rose-200 font-bold text-xs flex items-center justify-center shrink-0 active:scale-95 cursor-pointer shadow-2xs"
                           >
                             +2
                           </button>
@@ -807,12 +807,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </div>
 
                       {/* Técnica (0-2) */}
-                      <div className="bg-slate-950/80 p-2 rounded-xl border border-emerald-500/20">
+                      <div className="bg-emerald-50/60 p-2 rounded-xl border border-emerald-200">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] font-bold text-emerald-300">
+                          <span className="text-[10px] font-bold text-emerald-800">
                             🛠️ Técnica (Máx 2)
                           </span>
-                          <span className="text-[10px] font-mono font-bold text-emerald-400">
+                          <span className="text-[10px] font-mono font-bold text-emerald-700">
                             {sTec} pts
                           </span>
                         </div>
@@ -829,8 +829,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               }}
                               className={`py-1 rounded-md text-xs font-mono font-bold transition-all ${
                                 sTec === num && rowScores["tecnica"] !== ""
-                                  ? "bg-emerald-500 text-slate-950 shadow-sm"
-                                  : "bg-slate-900 text-slate-400 hover:text-white"
+                                  ? "bg-emerald-500 text-white shadow-xs"
+                                  : "bg-white text-slate-600 border border-slate-200 hover:bg-emerald-50"
                               }`}
                             >
                               {num}
@@ -843,15 +843,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <div
                         className={`col-span-2 p-2 rounded-xl border ${
                           isOddWeek
-                            ? "bg-slate-950/80 border-amber-500/30"
-                            : "bg-slate-950/40 border-slate-800 opacity-60"
+                            ? "bg-amber-50/60 border-amber-200"
+                            : "bg-slate-50 border-slate-200 opacity-60"
                         }`}
                       >
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] font-bold text-amber-300">
+                          <span className="text-[10px] font-bold text-amber-800">
                             🥁 Reto Ritmo (Semanas Impares · Máx 4 pts)
                           </span>
-                          <span className="text-[10px] font-mono font-bold text-amber-400">
+                          <span className="text-[10px] font-mono font-bold text-amber-700">
                             {sRitmo} pts
                           </span>
                         </div>
@@ -869,8 +869,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               }}
                               className={`py-1 rounded-md text-xs font-mono font-bold transition-all ${
                                 sRitmo === num && rowScores["ritmo"] !== ""
-                                  ? "bg-amber-400 text-slate-950 shadow-sm"
-                                  : "bg-slate-900 text-slate-400 hover:text-white disabled:opacity-40"
+                                  ? "bg-amber-400 text-amber-950 font-black shadow-xs"
+                                  : "bg-white text-slate-600 border border-slate-200 hover:bg-amber-50 disabled:opacity-40"
                               }`}
                             >
                               {num}
@@ -883,15 +883,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <div
                         className={`col-span-2 p-2 rounded-xl border ${
                           !isOddWeek
-                            ? "bg-slate-950/80 border-cyan-500/30"
-                            : "bg-slate-950/40 border-slate-800 opacity-60"
+                            ? "bg-sky-50/60 border-sky-200"
+                            : "bg-slate-50 border-slate-200 opacity-60"
                         }`}
                       >
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] font-bold text-cyan-300">
+                          <span className="text-[10px] font-bold text-sky-900">
                             🎼 Reto Claves (Semanas Pares · Máx 2 pts)
                           </span>
-                          <span className="text-[10px] font-mono font-bold text-cyan-400">
+                          <span className="text-[10px] font-mono font-bold text-sky-700">
                             {sNotas} pts
                           </span>
                         </div>
@@ -909,8 +909,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               }}
                               className={`py-1 rounded-md text-[11px] font-mono font-bold transition-all ${
                                 sNotas === num && rowScores["notas"] !== ""
-                                  ? "bg-cyan-400 text-slate-950 shadow-sm"
-                                  : "bg-slate-900 text-slate-400 hover:text-white disabled:opacity-40"
+                                  ? "bg-sky-400 text-sky-950 font-black shadow-xs"
+                                  : "bg-white text-slate-600 border border-slate-200 hover:bg-sky-50 disabled:opacity-40"
                               }`}
                             >
                               {num}
@@ -925,24 +925,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
           ) : (
             /* VISTA 2: TABLA SPREADSHEET */
-            <div className="bg-slate-900/95 rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
               <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
                 <table className="w-full text-left text-xs sm:text-sm">
-                  <thead className="bg-slate-950 text-[11px] sm:text-xs text-slate-300 uppercase tracking-wider border-b border-slate-800 sticky top-0 z-10">
+                  <thead className="bg-slate-50 text-[11px] sm:text-xs text-slate-600 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10">
                     <tr>
                       <th className="py-2.5 px-3 sm:px-4">Alumno</th>
-                      <th className="py-2.5 px-2 text-center text-rose-300">🎼 Obras (×2)</th>
-                      <th className="py-2.5 px-2 text-center text-emerald-300">🛠️ Técnica (2)</th>
-                      <th className={`py-2.5 px-2 text-center ${isOddWeek ? "text-amber-300 bg-amber-500/10" : "text-slate-500"}`}>
+                      <th className="py-2.5 px-2 text-center text-rose-700">🎼 Obras (×2)</th>
+                      <th className="py-2.5 px-2 text-center text-emerald-700">🛠️ Técnica (2)</th>
+                      <th className={`py-2.5 px-2 text-center ${isOddWeek ? "text-amber-800 bg-amber-50" : "text-slate-400"}`}>
                         🥁 Ritmo (4)
                       </th>
-                      <th className={`py-2.5 px-2 text-center ${!isOddWeek ? "text-cyan-300 bg-cyan-500/10" : "text-slate-500"}`}>
+                      <th className={`py-2.5 px-2 text-center ${!isOddWeek ? "text-sky-800 bg-sky-50" : "text-slate-400"}`}>
                         🎼 Claves (2)
                       </th>
-                      <th className="py-2.5 px-3 text-center text-amber-400 font-bold">Total</th>
+                      <th className="py-2.5 px-3 text-center text-amber-700 font-bold">Total</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-slate-100">
                     {filteredStudents.map((student) => {
                       const rowScores = weeklyScoresInput[student.id] || {};
                       const sObras = Number(rowScores["obras"]) || 0;
@@ -952,11 +952,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       const weekTotal = sObras + sTec + sRitmo + sNotas;
 
                       return (
-                        <tr key={student.id} className="hover:bg-slate-800/40">
+                        <tr key={student.id} className="hover:bg-slate-50/70">
                           <td className="py-2 px-3 font-medium">
                             <div className="flex items-center gap-1.5">
                               <span>{student.avatar}</span>
-                              <span className="truncate max-w-[120px] text-slate-100">{student.name}</span>
+                              <span className="truncate max-w-[120px] text-slate-800">{student.name}</span>
                             </div>
                           </td>
                           <td className="py-1.5 px-1 text-center">
@@ -974,7 +974,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 }));
                               }}
                               placeholder="0"
-                              className="w-12 text-center py-1 bg-slate-950 rounded-lg border border-slate-700 text-rose-300 font-mono text-xs"
+                              className="w-12 text-center py-1 bg-white rounded-lg border border-slate-200 text-rose-700 font-mono text-xs"
                             />
                           </td>
                           <td className="py-1.5 px-1 text-center">
@@ -991,10 +991,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 }));
                               }}
                               placeholder="0"
-                              className="w-12 text-center py-1 bg-slate-950 rounded-lg border border-slate-700 text-emerald-300 font-mono text-xs"
+                              className="w-12 text-center py-1 bg-white rounded-lg border border-slate-200 text-emerald-700 font-mono text-xs"
                             />
                           </td>
-                          <td className={`py-1.5 px-1 text-center ${isOddWeek ? "bg-amber-500/5" : "opacity-40"}`}>
+                          <td className={`py-1.5 px-1 text-center ${isOddWeek ? "bg-amber-50/40" : "opacity-40"}`}>
                             <input
                               type="number"
                               min="0"
@@ -1009,10 +1009,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 }));
                               }}
                               placeholder={isOddWeek ? "0" : "-"}
-                              className="w-12 text-center py-1 bg-slate-950 rounded-lg border border-slate-700 text-amber-300 font-mono text-xs"
+                              className="w-12 text-center py-1 bg-white rounded-lg border border-slate-200 text-amber-800 font-mono text-xs"
                             />
                           </td>
-                          <td className={`py-1.5 px-1 text-center ${!isOddWeek ? "bg-cyan-500/5" : "opacity-40"}`}>
+                          <td className={`py-1.5 px-1 text-center ${!isOddWeek ? "bg-sky-50/40" : "opacity-40"}`}>
                             <input
                               type="number"
                               min="0"
@@ -1028,10 +1028,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 }));
                               }}
                               placeholder={!isOddWeek ? "0" : "-"}
-                              className="w-12 text-center py-1 bg-slate-950 rounded-lg border border-slate-700 text-cyan-300 font-mono text-xs"
+                              className="w-12 text-center py-1 bg-white rounded-lg border border-slate-200 text-sky-800 font-mono text-xs"
                             />
                           </td>
-                          <td className="py-2 px-3 text-center font-mono font-bold text-amber-400">
+                          <td className="py-2 px-3 text-center font-mono font-bold text-amber-700">
                             {weekTotal}
                           </td>
                         </tr>
@@ -1044,12 +1044,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           )}
 
           {/* Barra de acción fija inferior en Móvil */}
-          <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 p-2.5 sm:relative sm:bg-transparent sm:border-0 sm:p-0">
+          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 p-2.5 sm:relative sm:bg-transparent sm:border-0 sm:p-0 shadow-lg sm:shadow-none">
             <div className="max-w-5xl mx-auto flex items-center justify-between gap-2">
               <button
                 onClick={handleSaveScores}
                 disabled={isLoading}
-                className="flex-1 sm:flex-initial py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 active:scale-95"
+                className="flex-1 sm:flex-initial py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-300 via-rose-200 to-pink-200 hover:from-amber-200 hover:to-pink-300 text-slate-800 font-bold text-xs sm:text-sm border border-amber-200/60 shadow-md shadow-rose-100 transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 active:scale-95"
               >
                 <Save className="w-4 h-4 shrink-0" />
                 <span>Guardar Sem. {selectedWeek}</span>
@@ -1058,7 +1058,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <button
                 onClick={handlePublishWeek}
                 disabled={isLoading}
-                className="flex-1 sm:flex-initial py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 active:scale-95"
+                className="flex-1 sm:flex-initial py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 active:scale-95"
               >
                 <Send className="w-4 h-4 shrink-0" />
                 <span>Publicar Notas</span>
@@ -1071,35 +1071,35 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       {/* PESTAÑA 2: CLASIFICACIÓN COMPLETA (Mobile First) */}
       {activeTab === "ranking" && (
         <div className="space-y-3 sm:space-y-4">
-          <div className="bg-slate-900/95 rounded-2xl border border-slate-800 p-3 sm:p-4 shadow-xl space-y-2">
+          <div className="bg-white/95 rounded-2xl border border-slate-200/90 p-3 sm:p-4 shadow-xs space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm sm:text-base font-black text-white flex items-center gap-1.5">
-                <Trophy className="w-4 h-4 text-amber-400" />
+              <h3 className="text-sm sm:text-base font-black text-slate-800 flex items-center gap-1.5">
+                <Trophy className="w-4 h-4 text-amber-500" />
                 <span>Clasificación General (28 Alumnos)</span>
               </h3>
-              <span className="text-[10px] text-slate-400 font-mono">
+              <span className="text-[10px] text-slate-500 font-mono">
                 {filteredRanking.length} alumnos
               </span>
             </div>
 
             <div className="flex items-center justify-between gap-2">
               <div className="relative flex-1">
-                <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Buscar alumno o PIN..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-8 pr-2.5 py-1.5 bg-slate-950 rounded-xl border border-slate-700 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full pl-8 pr-2.5 py-1.5 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-purple-300"
                 />
               </div>
 
-              <div className="flex items-center bg-slate-950 p-0.5 rounded-xl border border-slate-800 shrink-0">
+              <div className="flex items-center bg-slate-50 p-0.5 rounded-xl border border-slate-200 shrink-0 shadow-2xs">
                 <button
                   type="button"
                   onClick={() => setRankingView("cards")}
                   className={`flex items-center gap-1 py-1 px-2 rounded-lg text-xs font-semibold transition-colors ${
-                    rankingView === "cards" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
+                    rankingView === "cards" ? "bg-white text-purple-900 shadow-xs border border-purple-100" : "text-slate-500 hover:text-slate-800"
                   }`}
                   title="Vista Tarjetas (Táctil)"
                 >
@@ -1110,7 +1110,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   type="button"
                   onClick={() => setRankingView("table")}
                   className={`flex items-center gap-1 py-1 px-2 rounded-lg text-xs font-semibold transition-colors ${
-                    rankingView === "table" ? "bg-indigo-600 text-white shadow-sm" : "text-slate-400 hover:text-white"
+                    rankingView === "table" ? "bg-white text-purple-900 shadow-xs border border-purple-100" : "text-slate-500 hover:text-slate-800"
                   }`}
                   title="Vista Tabla (Spreadsheet)"
                 >
@@ -1130,12 +1130,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 return (
                   <div
                     key={student.id}
-                    className={`p-3 rounded-2xl border bg-slate-900/95 transition-colors shadow-md ${
+                    className={`p-3 rounded-2xl border bg-white transition-colors shadow-2xs ${
                       student.rank === 1
-                        ? "border-amber-400/50 bg-amber-500/5"
+                        ? "border-amber-300 bg-amber-50/40"
                         : isTop10
-                        ? "border-slate-800"
-                        : "border-slate-800/60 opacity-90"
+                        ? "border-slate-200"
+                        : "border-slate-200/60 opacity-90"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
@@ -1144,12 +1144,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         <span
                           className={`w-6 h-6 rounded-lg text-xs font-mono font-bold flex items-center justify-center shrink-0 ${
                             student.rank === 1
-                              ? "bg-amber-400 text-slate-950 font-black"
+                              ? "bg-amber-100 text-amber-800 border border-amber-300 font-black"
                               : student.rank === 2
-                              ? "bg-slate-300 text-slate-950 font-black"
+                              ? "bg-slate-100 text-slate-700 border border-slate-300 font-black"
                               : student.rank === 3
-                              ? "bg-amber-700 text-amber-100 font-black"
-                              : "bg-slate-800 text-slate-300"
+                              ? "bg-orange-100 text-orange-800 border border-orange-300 font-black"
+                              : "bg-slate-100 text-slate-600"
                           }`}
                         >
                           #{student.rank}
@@ -1158,13 +1158,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         <span className="text-lg shrink-0">{student.avatar}</span>
 
                         <div className="min-w-0">
-                          <p className="font-bold text-xs text-slate-100 truncate">
+                          <p className="font-bold text-xs text-slate-800 truncate">
                             {student.name}
                           </p>
-                          <p className="text-[10px] text-slate-400">
-                            PIN: <span className="font-mono text-indigo-300 font-bold">{student.pin}</span>
+                          <p className="text-[10px] text-slate-500">
+                            PIN: <span className="font-mono text-purple-700 font-bold">{student.pin}</span>
                             {student.rank > 1 && (
-                              <span className="text-slate-500 ml-1">· A {student.pointsToNextRank} pts #{student.rank - 1}</span>
+                              <span className="text-slate-400 ml-1">· A {student.pointsToNextRank} pts #{student.rank - 1}</span>
                             )}
                           </p>
                         </div>
@@ -1172,23 +1172,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                       {/* Puntos y Tendencia */}
                       <div className="text-right shrink-0">
-                        <span className="text-sm font-mono font-black text-amber-400">
+                        <span className="text-sm font-mono font-black text-amber-700">
                           {student.totalScore} pts
                         </span>
                         <div className="flex justify-end mt-0.5">
                           {student.rankChange > 0 && (
-                            <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-1 py-0.2 rounded-full">
+                            <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1 py-0.2 rounded-full border border-emerald-200">
                               <TrendingUp className="w-2.5 h-2.5" />+{student.rankChange}
                             </span>
                           )}
                           {student.rankChange < 0 && (
-                            <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-rose-400 bg-rose-500/10 px-1 py-0.2 rounded-full">
+                            <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-rose-700 bg-rose-50 px-1 py-0.2 rounded-full border border-rose-200">
                               <TrendingDown className="w-2.5 h-2.5" />
                               {student.rankChange}
                             </span>
                           )}
                           {student.rankChange === 0 && (
-                            <span className="inline-flex items-center text-[9px] text-slate-500">
+                            <span className="inline-flex items-center text-[9px] text-slate-400 bg-slate-100 px-1 py-0.5 rounded-full">
                               <Minus className="w-2 h-2" />
                             </span>
                           )}
@@ -1197,12 +1197,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     </div>
 
                     {/* Botón WhatsApp 1-Tap para móvil */}
-                    <div className="mt-2.5 pt-2 border-t border-slate-800/80">
+                    <div className="mt-2.5 pt-2 border-t border-slate-100">
                       <button
                         onClick={() => openWhatsApp(student)}
-                        className="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-sm"
+                        className="w-full py-2 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100/80 text-emerald-800 border border-emerald-200 font-semibold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs"
                       >
-                        <MessageCircle className="w-3.5 h-3.5" />
+                        <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
                         <span>Enviar Puesto por WhatsApp</span>
                       </button>
                     </div>
@@ -1212,10 +1212,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
           ) : (
             /* TABLA COMPLETA */
-            <div className="bg-slate-900/90 rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
               <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
                 <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-950 text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800 sticky top-0 z-10">
+                  <thead className="bg-slate-50 text-xs text-slate-600 uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10">
                     <tr>
                       <th className="py-3 px-4">Puesto</th>
                       <th className="py-3 px-4">Alumno</th>
@@ -1225,29 +1225,29 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <th className="py-3 px-4 text-center">Aviso WhatsApp</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-slate-100">
                     {filteredRanking.map((student) => {
                       const isTop10 = student.rank <= 10;
 
                       return (
                         <tr
                           key={student.id}
-                          className={`hover:bg-slate-800/40 transition-colors ${
-                            isTop10 ? "bg-amber-500/[0.03]" : ""
+                          className={`hover:bg-slate-50/70 transition-colors ${
+                            isTop10 ? "bg-amber-50/20" : ""
                           }`}
                         >
                           <td className="py-3 px-4 font-mono font-bold">
                             <span
                               className={`inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs ${
                                 student.rank === 1
-                                  ? "bg-amber-400 text-slate-950 font-black"
+                                  ? "bg-amber-100 text-amber-800 border border-amber-300 font-black"
                                   : student.rank === 2
-                                  ? "bg-slate-300 text-slate-950 font-black"
+                                  ? "bg-slate-100 text-slate-700 border border-slate-300 font-black"
                                   : student.rank === 3
-                                  ? "bg-amber-700 text-amber-100 font-black"
+                                  ? "bg-orange-100 text-orange-800 border border-orange-300 font-black"
                                   : isTop10
-                                  ? "bg-slate-800 text-amber-300 font-bold border border-amber-500/30"
-                                  : "bg-slate-800 text-slate-400"
+                                  ? "bg-amber-50 text-amber-900 font-bold border border-amber-200"
+                                  : "bg-slate-100 text-slate-600"
                               }`}
                             >
                               #{student.rank}
@@ -1257,7 +1257,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             <div className="flex items-center gap-2">
                               <span className="text-lg">{student.avatar}</span>
                               <div>
-                                <p className="font-bold text-slate-100">{student.name}</p>
+                                <p className="font-bold text-slate-800">{student.name}</p>
                                 {student.rank > 1 && (
                                   <p className="text-[11px] text-slate-400">
                                     A {student.pointsToNextRank} pts del #{student.rank - 1}
@@ -1266,35 +1266,35 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               </div>
                             </div>
                           </td>
-                          <td className="py-3 px-3 text-center font-mono text-xs text-indigo-300">
+                          <td className="py-3 px-3 text-center font-mono text-xs text-purple-700 font-bold">
                             {student.pin}
                           </td>
                           <td className="py-3 px-3 text-center">
                             {student.rankChange > 0 && (
-                              <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
-                                <TrendingUp className="w-3 h-3" />+{student.rankChange}
+                              <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                                <TrendingUp className="w-3 h-3 text-emerald-600" />+{student.rankChange}
                               </span>
                             )}
                             {student.rankChange < 0 && (
-                              <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full">
-                                <TrendingDown className="w-3 h-3" />
+                              <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
+                                <TrendingDown className="w-3 h-3 text-rose-600" />
                                 {student.rankChange}
                               </span>
                             )}
                             {student.rankChange === 0 && (
-                              <span className="text-slate-500 text-xs">➖</span>
+                              <span className="text-slate-400 text-xs">➖</span>
                             )}
                           </td>
-                          <td className="py-3 px-4 text-right font-mono font-bold text-base text-amber-400">
+                          <td className="py-3 px-4 text-right font-mono font-bold text-base text-amber-700">
                             {student.totalScore} pts
                           </td>
                           <td className="py-3 px-4 text-center">
                             <button
                               onClick={() => openWhatsApp(student)}
                               title="Enviar actualización por WhatsApp"
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition-all shadow-sm cursor-pointer"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-semibold text-xs transition-all shadow-2xs cursor-pointer"
                             >
-                              <MessageCircle className="w-3.5 h-3.5" />
+                              <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
                               <span>WhatsApp</span>
                             </button>
                           </td>
@@ -1313,17 +1313,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       {activeTab === "students" && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Formulario de Creación / Edición */}
-          <div className="bg-slate-900/95 rounded-2xl border border-slate-800 p-4 shadow-xl h-fit">
+          <div className="bg-white/95 rounded-2xl border border-slate-200/90 p-4 shadow-xs h-fit">
             <div className="flex items-center justify-between mb-3">
-              <h3 className={`text-base font-bold flex items-center gap-2 ${editingStudentId ? "text-amber-300" : "text-white"}`}>
+              <h3 className={`text-base font-bold flex items-center gap-2 ${editingStudentId ? "text-amber-800" : "text-slate-800"}`}>
                 {editingStudentId ? (
                   <>
-                    <Edit3 className="w-4 h-4 text-amber-400" />
+                    <Edit3 className="w-4 h-4 text-amber-600" />
                     <span>Editar Alumno</span>
                   </>
                 ) : (
                   <>
-                    <PlusCircle className="w-4 h-4 text-indigo-400" />
+                    <PlusCircle className="w-4 h-4 text-purple-600" />
                     <span>Nuevo Alumno</span>
                   </>
                 )}
@@ -1332,7 +1332,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <button
                   type="button"
                   onClick={handleCancelEdit}
-                  className="text-[11px] text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded-lg transition-colors"
+                  className="text-[11px] text-slate-500 hover:text-slate-800 flex items-center gap-1 cursor-pointer bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-lg transition-colors"
                 >
                   <X className="w-3 h-3" />
                   <span>Cancelar</span>
@@ -1341,25 +1341,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
 
             {editingStudentId && (
-              <div className="mb-3 p-2 rounded-xl bg-amber-500/10 border border-amber-500/25 text-[11px] text-amber-300 flex items-center justify-between">
+              <div className="mb-3 p-2 rounded-xl bg-amber-50 border border-amber-200 text-[11px] text-amber-800 flex items-center justify-between">
                 <span>Modificando a: <strong>{studentFormData.name}</strong></span>
               </div>
             )}
 
             <form onSubmit={handleSaveStudent} className="space-y-3">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">Nombre</label>
+                <label className="block text-[11px] font-semibold text-slate-600 mb-1">Nombre</label>
                 <input
                   type="text"
                   placeholder="Ej: Laura Gómez"
                   value={studentFormData.name}
                   onChange={(e) => setStudentFormData({ ...studentFormData, name: e.target.value })}
-                  className="w-full py-2 px-3 bg-slate-950 rounded-xl border border-slate-700 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full py-2 px-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-purple-300"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                <label className="block text-[11px] font-semibold text-slate-600 mb-1">
                   PIN de Acceso (4 dígitos)
                 </label>
                 <input
@@ -1368,18 +1368,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   placeholder="Ej: 1029"
                   value={studentFormData.pin}
                   onChange={(e) => setStudentFormData({ ...studentFormData, pin: e.target.value })}
-                  className="w-full py-2 px-3 bg-slate-950 rounded-xl border border-slate-700 text-xs text-amber-300 font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full py-2 px-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-amber-700 font-mono font-bold focus:outline-none focus:ring-1 focus:ring-purple-300"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                <label className="block text-[11px] font-semibold text-slate-600 mb-1">
                   Nivel de Lectura
                 </label>
                 <select
                   value={studentFormData.level}
                   onChange={(e) => setStudentFormData({ ...studentFormData, level: e.target.value })}
-                  className="w-full py-2 px-3 bg-slate-950 rounded-xl border border-slate-700 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full py-2 px-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-purple-300 cursor-pointer"
                 >
                   <option value="Iniciación">Iniciación (20s tiempo límite)</option>
                   <option value="Intermedio">Intermedio (15s tiempo límite)</option>
@@ -1388,7 +1388,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                <label className="block text-[11px] font-semibold text-slate-600 mb-1">
                   Avatar Musical
                 </label>
                 <div className="flex gap-1.5 flex-wrap">
@@ -1399,8 +1399,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       onClick={() => setStudentFormData({ ...studentFormData, avatar: emoji })}
                       className={`w-8 h-8 rounded-lg border text-sm flex items-center justify-center transition-all cursor-pointer ${
                         studentFormData.avatar === emoji
-                          ? "border-amber-400 bg-amber-500/20"
-                          : "border-slate-700 bg-slate-800 hover:bg-slate-700"
+                          ? "border-amber-300 bg-amber-100/70"
+                          : "border-slate-200 bg-white hover:bg-slate-50"
                       }`}
                     >
                       {emoji}
@@ -1415,8 +1415,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   disabled={isLoading}
                   className={`flex-1 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all cursor-pointer active:scale-95 disabled:opacity-50 ${
                     editingStudentId
-                      ? "bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20"
-                      : "bg-indigo-600 hover:bg-indigo-500 text-white"
+                      ? "bg-gradient-to-r from-amber-300 to-rose-200 hover:from-amber-200 hover:to-rose-300 text-slate-800 border border-amber-200"
+                      : "bg-purple-600 hover:bg-purple-700 text-white shadow-purple-200"
                   }`}
                 >
                   {editingStudentId ? "Guardar Cambios" : "Añadir al Concurso"}
@@ -1425,7 +1425,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <button
                     type="button"
                     onClick={handleCancelEdit}
-                    className="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition-colors cursor-pointer"
+                    className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs border border-slate-200 transition-colors cursor-pointer"
                   >
                     Cancelar
                   </button>
@@ -1435,28 +1435,28 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
 
           {/* Lista de Alumnos con Búsqueda y Botones de Editar y Eliminar */}
-          <div className="md:col-span-2 bg-slate-900/95 rounded-2xl border border-slate-800 p-4 shadow-xl flex flex-col justify-between">
+          <div className="md:col-span-2 bg-white/95 rounded-2xl border border-slate-200/90 p-4 shadow-xs flex flex-col justify-between">
             <div>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                <h3 className="text-base font-bold text-white flex items-center gap-1.5">
-                  <Users className="w-4 h-4 text-amber-400" />
+                <h3 className="text-base font-bold text-slate-800 flex items-center gap-1.5">
+                  <Users className="w-4 h-4 text-purple-600" />
                   <span>Alumnos Registrados ({students.length})</span>
                 </h3>
 
                 {/* Filtro rápido de alumnos */}
                 <div className="relative w-full sm:w-56">
-                  <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     placeholder="Buscar alumno o PIN..."
                     value={studentSearchTerm}
                     onChange={(e) => setStudentSearchTerm(e.target.value)}
-                    className="w-full pl-8 pr-2.5 py-1.5 bg-slate-950 rounded-xl border border-slate-700 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    className="w-full pl-8 pr-2.5 py-1.5 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-purple-300"
                   />
                 </div>
               </div>
 
-              <div className="divide-y divide-slate-800/80 max-h-[520px] overflow-y-auto pr-1">
+              <div className="divide-y divide-slate-100 max-h-[520px] overflow-y-auto pr-1">
                 {students
                   .filter((st) =>
                     st.name.toLowerCase().includes(studentSearchTerm.toLowerCase()) ||
@@ -1468,22 +1468,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <div
                         key={st.id}
                         className={`py-2.5 px-2 flex items-center justify-between gap-2 transition-colors rounded-xl ${
-                          isBeingEdited ? "bg-amber-500/10 border border-amber-500/30" : "hover:bg-slate-800/40"
+                          isBeingEdited ? "bg-amber-50/80 border border-amber-200" : "hover:bg-slate-50"
                         }`}
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
                           <span className="text-xl shrink-0">{st.avatar}</span>
                           <div className="min-w-0">
-                            <p className="font-bold text-xs text-slate-100 truncate flex items-center gap-1.5">
+                            <p className="font-bold text-xs text-slate-800 truncate flex items-center gap-1.5">
                               <span>{st.name}</span>
                               {isBeingEdited && (
-                                <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 border border-amber-200">
                                   Editando
                                 </span>
                               )}
                             </p>
-                            <p className="text-[10px] text-slate-400">
-                              PIN: <code className="text-amber-400 font-mono font-bold">{st.pin}</code> · {st.level || "Intermedio"}
+                            <p className="text-[10px] text-slate-500">
+                              PIN: <code className="text-amber-700 font-mono font-bold">{st.pin}</code> · {st.level || "Intermedio"}
                             </p>
                           </div>
                         </div>
@@ -1493,17 +1493,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           <button
                             type="button"
                             onClick={() => handleStartEdit(st)}
-                            className="flex items-center gap-1 py-1.5 px-2.5 rounded-lg bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 border border-slate-700 hover:border-amber-500/30 text-xs font-semibold transition-all cursor-pointer active:scale-95"
+                            className="flex items-center gap-1 py-1.5 px-2.5 rounded-lg bg-slate-100 hover:bg-amber-50 text-slate-700 hover:text-amber-800 border border-slate-200 text-xs font-semibold transition-all cursor-pointer active:scale-95 shadow-2xs"
                             title={`Editar datos de ${st.name}`}
                           >
-                            <Pencil className="w-3.5 h-3.5 text-amber-400" />
+                            <Pencil className="w-3.5 h-3.5 text-amber-600" />
                             <span className="hidden xs:inline sm:inline">Editar</span>
                           </button>
 
                           <button
                             type="button"
                             onClick={() => handleDeleteStudent(st.id, st.name)}
-                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-950 text-slate-400 hover:text-rose-400 border border-slate-700 hover:border-rose-500/30 transition-all cursor-pointer active:scale-95 shrink-0"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-700 border border-slate-200 transition-all cursor-pointer active:scale-95 shrink-0 shadow-2xs"
                             title={`Eliminar ${st.name}`}
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -1520,20 +1520,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
       {/* PESTAÑA 4: CONFIGURACIÓN */}
       {activeTab === "settings" && (
-        <div className="max-w-2xl bg-slate-900/95 rounded-2xl border border-slate-800 p-4 sm:p-6 shadow-xl space-y-4">
+        <div className="max-w-2xl bg-white/95 rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-xs space-y-4">
           <div>
-            <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
-              <Settings className="w-4 h-4 text-indigo-400" />
+            <h3 className="text-base sm:text-lg font-black text-slate-800 flex items-center gap-2">
+              <Settings className="w-4 h-4 text-purple-600" />
               Configuración de LA LIGA DEL PIANISTA
             </h3>
-            <p className="text-[11px] text-slate-400 mt-0.5">
+            <p className="text-[11px] text-slate-500 mt-0.5">
               Bases oficiales de competición: 27 semanas · 28 alumnos
             </p>
           </div>
 
           <div className="space-y-3.5">
             <div>
-              <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
                 Título del Evento
               </label>
               <input
@@ -1542,12 +1542,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 onChange={(e) =>
                   setSettings((prev) => (prev ? { ...prev, title: e.target.value } : null))
                 }
-                className="w-full py-2 px-3 bg-slate-950 rounded-xl border border-slate-700 text-xs sm:text-sm text-white"
+                className="w-full py-2 px-3 bg-slate-50 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-purple-300"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
                 Semana Actual de Competición
               </label>
               <input
@@ -1560,37 +1560,37 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     prev ? { ...prev, currentWeek: Number(e.target.value) } : null
                   )
                 }
-                className="w-28 py-2 px-3 bg-slate-950 rounded-xl border border-slate-700 text-xs sm:text-sm text-amber-300 font-mono"
+                className="w-28 py-2 px-3 bg-slate-50 rounded-xl border border-slate-200 text-xs sm:text-sm text-amber-800 font-mono font-bold focus:outline-none focus:ring-1 focus:ring-purple-300"
               />
             </div>
 
             {/* Sección de Notificaciones Push a Móviles */}
-            <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-2.5">
-              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-200">
-                <Bell className="w-4 h-4 text-amber-400" />
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-800">
+                <Bell className="w-4 h-4 text-amber-600" />
                 <span>Notificaciones Push a Móviles</span>
               </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
+              <p className="text-[11px] text-slate-500 leading-relaxed">
                 Prueba el envío automático a todos los móviles suscritos (con la pantalla apagada o el navegador cerrado).
               </p>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={handleTestBroadcastPush}
-                  className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                  className="py-2 px-3 rounded-xl bg-white hover:bg-amber-50 text-amber-800 border border-amber-200 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-2xs"
                 >
-                  <Send className="w-3.5 h-3.5" />
+                  <Send className="w-3.5 h-3.5 text-amber-600" />
                   <span>Enviar Aviso de Prueba a Todos los Móviles</span>
                 </button>
               </div>
               {testPushStatus && (
-                <p className="text-[11px] text-amber-300 font-medium">
+                <p className="text-[11px] text-amber-800 font-medium">
                   {testPushStatus}
                 </p>
               )}
             </div>
 
-            <div className="pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2">
+            <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
               <button
                 type="button"
                 onClick={async () => {
@@ -1606,7 +1606,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   alert("Configuración guardada correctamente");
                   fetchAdminData(adminToken);
                 }}
-                className="py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs cursor-pointer active:scale-95"
+                className="py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs cursor-pointer active:scale-95 shadow-xs shadow-purple-200"
               >
                 Guardar Configuración
               </button>
@@ -1627,9 +1627,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     fetchAdminData(adminToken);
                   }
                 }}
-                className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-rose-950/50 text-slate-400 hover:text-rose-300 text-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
+                className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-700 text-xs border border-slate-200 flex items-center gap-1.5 cursor-pointer active:scale-95"
               >
-                <RefreshCw className="w-3 h-3" />
+                <RefreshCw className="w-3 h-3 text-slate-500" />
                 <span>Restaurar Datos Oficiales</span>
               </button>
             </div>

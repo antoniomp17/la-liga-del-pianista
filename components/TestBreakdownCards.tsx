@@ -9,26 +9,30 @@ interface TestBreakdownCardsProps {
   scoresByTest: { [testId: string]: number };
 }
 
-const TEST_META: { [key: string]: { icon: React.ReactNode; color: string; badgeColor: string } } = {
+const TEST_META: { [key: string]: { icon: React.ReactNode; color: string; badgeColor: string; scoreColor: string } } = {
   obras: {
-    icon: <Music2 className="w-5 h-5 text-rose-400" />,
-    color: "from-rose-500/15 via-slate-900 to-slate-950 border-rose-500/30",
-    badgeColor: "bg-rose-500/20 text-rose-300 border-rose-500/30",
+    icon: <Music2 className="w-5 h-5 text-rose-500" />,
+    color: "from-rose-50/90 via-white to-rose-50/30 border-rose-200/80 shadow-rose-100/50",
+    badgeColor: "bg-rose-100 text-rose-800 border-rose-200",
+    scoreColor: "text-rose-600",
   },
   tecnica: {
-    icon: <Wrench className="w-5 h-5 text-emerald-400" />,
-    color: "from-emerald-500/15 via-slate-900 to-slate-950 border-emerald-500/30",
-    badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+    icon: <Wrench className="w-5 h-5 text-emerald-600" />,
+    color: "from-emerald-50/90 via-white to-emerald-50/30 border-emerald-200/80 shadow-emerald-100/50",
+    badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+    scoreColor: "text-emerald-700",
   },
   ritmo: {
-    icon: <Drum className="w-5 h-5 text-amber-400" />,
-    color: "from-amber-500/15 via-slate-900 to-slate-950 border-amber-500/30",
-    badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/30",
+    icon: <Drum className="w-5 h-5 text-amber-600" />,
+    color: "from-amber-50/90 via-white to-amber-50/30 border-amber-200/80 shadow-amber-100/50",
+    badgeColor: "bg-amber-100 text-amber-800 border-amber-200",
+    scoreColor: "text-amber-700",
   },
   notas: {
-    icon: <KeyRound className="w-5 h-5 text-cyan-400" />,
-    color: "from-cyan-500/15 via-slate-900 to-slate-950 border-cyan-500/30",
-    badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/30",
+    icon: <KeyRound className="w-5 h-5 text-sky-600" />,
+    color: "from-sky-50/90 via-white to-sky-50/30 border-sky-200/80 shadow-sky-100/50",
+    badgeColor: "bg-sky-100 text-sky-800 border-sky-200",
+    scoreColor: "text-sky-700",
   },
 };
 
@@ -41,12 +45,12 @@ export const TestBreakdownCards: React.FC<TestBreakdownCardsProps> = ({
       {/* Cabecera de la sección */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3.5 sm:mb-4 px-1">
         <div className="flex items-center gap-2">
-          <Layers className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0" />
-          <h3 className="font-bold text-sm sm:text-base text-slate-100">
+          <Layers className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0" />
+          <h3 className="font-bold text-sm sm:text-base text-slate-800">
             Tu Puntuación en los Frentes Oficiales
           </h3>
         </div>
-        <span className="text-[11px] sm:text-xs text-slate-400">
+        <span className="text-[11px] sm:text-xs text-slate-500">
           Suma acumulada de obras, técnica y retos rotativos
         </span>
       </div>
@@ -56,20 +60,21 @@ export const TestBreakdownCards: React.FC<TestBreakdownCardsProps> = ({
         {tests.map((test) => {
           const score = scoresByTest[test.id] || 0;
           const meta = TEST_META[test.id] || {
-            icon: <Music2 className="w-5 h-5 text-amber-400" />,
-            color: "from-slate-800 to-slate-900 border-slate-700",
-            badgeColor: "bg-slate-800 text-slate-300 border-slate-700",
+            icon: <Music2 className="w-5 h-5 text-amber-600" />,
+            color: "from-slate-50 to-white border-slate-200 shadow-slate-100",
+            badgeColor: "bg-slate-100 text-slate-700 border-slate-200",
+            scoreColor: "text-slate-800",
           };
 
           return (
             <div
               key={test.id}
-              className={`rounded-2xl p-4 sm:p-5 border bg-gradient-to-b ${meta.color} shadow-lg transition-all group flex flex-col justify-between`}
+              className={`rounded-2xl p-4 sm:p-5 border bg-gradient-to-b ${meta.color} shadow-sm hover:shadow-md transition-all group flex flex-col justify-between`}
             >
               <div>
                 {/* Cabecera centrada: icono, badge y título */}
                 <div className="flex flex-col items-center text-center gap-2 mb-3">
-                  <div className="p-2 sm:p-2.5 rounded-2xl bg-slate-900/90 border border-slate-700/80 shadow-inner">
+                  <div className="p-2 sm:p-2.5 rounded-2xl bg-white border border-slate-200/70 shadow-xs">
                     {meta.icon}
                   </div>
                   <div>
@@ -79,25 +84,25 @@ export const TestBreakdownCards: React.FC<TestBreakdownCardsProps> = ({
                       {test.badge || test.shortName}
                     </span>
                   </div>
-                  <h4 className="font-black text-sm sm:text-base text-slate-100 leading-snug px-1">
+                  <h4 className="font-black text-sm sm:text-base text-slate-800 leading-snug px-1">
                     {test.name}
                   </h4>
                 </div>
 
                 {/* Descripción completa sin cortes ni truncado */}
-                <p className="text-xs text-slate-300 leading-relaxed text-center px-1">
+                <p className="text-xs text-slate-600 leading-relaxed text-center px-1">
                   {test.description}
                 </p>
               </div>
 
               {/* Puntuación sumada en este frente */}
-              <div className="mt-4 pt-3 border-t border-slate-800/80">
-                <div className="flex items-center justify-between px-3 py-2 bg-slate-950/60 border border-slate-800/80 rounded-xl">
-                  <span className="text-xs text-slate-400 font-medium">
+              <div className="mt-4 pt-3 border-t border-slate-200/60">
+                <div className="flex items-center justify-between px-3 py-2 bg-white/90 border border-slate-200/80 rounded-xl shadow-2xs">
+                  <span className="text-xs text-slate-500 font-medium">
                     Puntos sumados
                   </span>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-xl sm:text-2xl font-black font-mono text-amber-400">
+                    <span className={`text-xl sm:text-2xl font-black font-mono ${meta.scoreColor}`}>
                       {score}
                     </span>
                     <span className="text-xs text-slate-400">pts</span>
