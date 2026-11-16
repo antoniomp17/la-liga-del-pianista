@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Trophy, Target, Zap } from "lucide-react";
+import { Trophy, Target, Zap, Award } from "lucide-react";
 import { CurrentStudentDetails } from "@/types/contest";
 
 interface PointsToNextRankCardProps {
@@ -42,17 +42,31 @@ export const PointsToNextRankCard: React.FC<PointsToNextRankCardProps> = ({
       <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3.5 sm:gap-6">
         {/* Info y Puntos */}
         <div className="space-y-1.5 sm:space-y-2.5">
-          <div className="inline-flex items-center gap-1.5 rounded-full text-[10px] sm:text-xs font-bold tracking-wide uppercase">
+          <div className="flex items-center gap-1.5 flex-wrap text-[10px] sm:text-xs font-bold tracking-wide uppercase">
             {isLeader ? (
-              <span className="flex items-center gap-1 text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200">
+              <span className="flex items-center gap-1 text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-200 shadow-2xs">
                 <Trophy className="w-3 h-3 text-amber-600" />
                 <span>Líder de la Liga</span>
               </span>
             ) : (
-              <span className="flex items-center gap-1 text-indigo-900 bg-indigo-100 px-2 py-0.5 rounded-full border border-indigo-200">
-                <Target className="w-3 h-3 text-indigo-600" />
-                <span>Objetivo Próxima Posición</span>
-              </span>
+              <>
+                <span
+                  className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full border font-black shadow-2xs ${
+                    rank === 2
+                      ? "bg-slate-100 text-slate-800 border-slate-300"
+                      : rank === 3
+                      ? "bg-orange-100 text-orange-900 border-orange-300"
+                      : "bg-amber-100 text-amber-900 border-amber-300"
+                  }`}
+                >
+                  <Award className="w-3 h-3 text-amber-600" />
+                  <span>Tu Posición: #{rank}</span>
+                </span>
+                <span className="flex items-center gap-1 text-indigo-900 bg-indigo-100 px-2 py-0.5 rounded-full border border-indigo-200">
+                  <Target className="w-3 h-3 text-indigo-600" />
+                  <span>Objetivo Próxima Posición</span>
+                </span>
+              </>
             )}
           </div>
 
@@ -68,6 +82,30 @@ export const PointsToNextRankCard: React.FC<PointsToNextRankCardProps> = ({
               </div>
             ) : (
               <div>
+                <h3 className="text-base sm:text-xl font-black text-slate-800 mb-1 flex items-center gap-1.5">
+                  {rank === 2 ? (
+                    <>
+                      <span>¡Vas en 2ª Posición! 🥈</span>
+                      <span className="text-[11px] sm:text-xs font-medium text-slate-500 hidden sm:inline">
+                        (Medalla de Plata provisional)
+                      </span>
+                    </>
+                  ) : rank === 3 ? (
+                    <>
+                      <span>¡Vas en 3ª Posición! 🥉</span>
+                      <span className="text-[11px] sm:text-xs font-medium text-slate-500 hidden sm:inline">
+                        (Medalla de Bronce provisional)
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Estás en el Puesto #{rank}</span>
+                      <span className="text-[11px] sm:text-xs font-medium text-slate-500 hidden sm:inline">
+                        ({totalScore} pts acumulados)
+                      </span>
+                    </>
+                  )}
+                </h3>
                 <div className="flex items-baseline gap-1.5 flex-wrap">
                   <span className="text-xs sm:text-sm font-semibold text-slate-500">Te faltan</span>
                   <span className="text-2xl sm:text-4xl font-black text-amber-600 font-mono tracking-tight">
@@ -93,12 +131,12 @@ export const PointsToNextRankCard: React.FC<PointsToNextRankCardProps> = ({
         {!isLeader && (
           <div className="w-full md:w-72 bg-white/90 p-3 rounded-xl border border-indigo-100 shadow-2xs space-y-2">
             <div className="flex items-center justify-between text-[10px] sm:text-xs font-medium">
-              <span className="flex items-center gap-1 text-sky-800">
-                <span className="w-1.5 h-1.5 rounded-full bg-sky-400 inline-block" />
+              <span className="flex items-center gap-1 text-sky-900 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-200 shadow-2xs font-bold">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-500 inline-block" />
                 Tú (#{rank}): <strong>{totalScore} pts</strong>
               </span>
-              <span className="flex items-center gap-1 text-amber-800">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
+              <span className="flex items-center gap-1 text-amber-900 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200 shadow-2xs font-bold">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
                 #{rank - 1}: <strong>{nextRankTargetScore ?? totalScore + pointsToNextRank} pts</strong>
               </span>
             </div>

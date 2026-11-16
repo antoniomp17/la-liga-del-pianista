@@ -25,6 +25,7 @@ import {
   Bell,
   Pencil,
   X,
+  Clock,
 } from "lucide-react";
 import { ContestSettings, Student } from "@/types/contest";
 import { FullRankedStudent } from "@/lib/ranking";
@@ -62,6 +63,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [mobileScoresView, setMobileScoresView] = useState<"cards" | "table">("cards");
   const [rankingView, setRankingView] = useState<"cards" | "table">("cards");
+  const [scoresFilter, setScoresFilter] = useState<"pending" | "completed" | "all">("pending");
+  const [savingStudentId, setSavingStudentId] = useState<string | null>(null);
 
   // Estado para gestión y edición de alumnos
   const [editingStudentId, setEditingStudentId] = useState<string | null>(null);
@@ -126,7 +129,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     onLogout();
   };
 
-  const fetchAdminData = async (tokenToUse?: string) => {
+  const fetchAdminData = async (tokenToUse?: string, targetWeek?: number) => {
     const token = tokenToUse || adminToken;
     setIsLoading(true);
     try {
@@ -139,10 +142,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         setSettings(resData.data.settings);
         setStudents(resData.data.students);
         setFullRanking(resData.data.fullRanking);
-        setSelectedWeek(resData.data.settings.currentWeek);
+
+        const weekToKeep = targetWeek ?? selectedWeek ?? resData.data.settings.currentWeek;
+        setSelectedWeek(weekToKeep);
         onWeekUpdated?.(resData.data.settings.currentWeek);
 
-        initWeeklyScoresInput(resData.data.students, resData.data.settings.currentWeek);
+        initWeeklyScoresInput(resData.data.students, weekToKeep);
       } else {
         setIsAuthenticated(false);
         setLoginError(resData.error || "No autorizado");
@@ -173,6 +178,66 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     initWeeklyScoresInput(students, week);
   };
 
+  const handleSaveSingleStudent = async (studentId: string, studentName: string) => {
+    setSavingStudentId(studentId);
+    setSaveSuccessMessage("");
+
+    const rowScores = weeklyScoresInput[studentId] || {};
+    const sanitizedScores = {
+      obras: Number(rowScores["obras"]) || 0,
+      tecnica: Number(rowScores["tecnica"]) || 0,
+      ritmo: Number(rowScores["ritmo"]) || 0,
+      notas: Number(rowScores["notas"]) || 0,
+    };
+
+    try {
+      const res = await fetch("/api/admin/scores", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-token": adminToken,
+        },
+        body: JSON.stringify({
+          weekNumber: selectedWeek,
+          scores: {
+            [studentId]: sanitizedScores,
+          },
+          setAsCurrentWeek: false,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Error al guardar notas");
+
+      // Actualizar estado local inmediatamente para que el alumno desaparezca al instante en vista "Pendientes"
+      setStudents((prev) =>
+        prev.map((st) => {
+          if (st.id === studentId) {
+            return {
+              ...st,
+              scoresByWeek: {
+                ...(st.scoresByWeek || {}),
+                [selectedWeek]: sanitizedScores,
+              },
+            };
+          }
+          return st;
+        })
+      );
+
+      setSaveSuccessMessage(`✅ ¡Puntos de ${studentName} guardados para la Semana ${selectedWeek}!`);
+      setTimeout(() => setSaveSuccessMessage(""), 4000);
+
+      // Recargar datos en segundo plano conservando la semana seleccionada
+      await fetchAdminData(adminToken, selectedWeek);
+    } catch (err: unknown) {
+      const error = err as Error;
+      alert(`Error al guardar notas de ${studentName}: ` + error.message);
+    } finally {
+      setSavingStudentId(null);
+    }
+  };
+
   const handleSaveScores = async () => {
     setIsLoading(true);
     setSaveSuccessMessage("");
@@ -197,7 +262,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       }
 
       setSaveSuccessMessage(`¡Puntuaciones de la Semana ${selectedWeek} guardadas con éxito!`);
-      await fetchAdminData(adminToken);
+      await fetchAdminData(adminToken, selectedWeek);
       setTimeout(() => setSaveSuccessMessage(""), 4000);
     } catch (err: unknown) {
       const error = err as Error;
@@ -464,11 +529,29 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const currentCalInfo = OFFICIAL_CALENDAR.find((c) => c.weekNumber === selectedWeek);
   const isOddWeek = selectedWeek % 2 !== 0;
 
-  const filteredStudents = students.filter(
-    (s) =>
+  // Comprobar si un alumno ya tiene notas guardadas en la semana seleccionada
+  const isStudentGradedForWeek = (student: Student, week: number): boolean => {
+    const weekData = student.scoresByWeek?.[week];
+    if (!weekData) return false;
+    return Object.keys(weekData).length > 0;
+  };
+
+  const pendingStudents = students.filter((s) => !isStudentGradedForWeek(s, selectedWeek));
+  const completedStudents = students.filter((s) => isStudentGradedForWeek(s, selectedWeek));
+  const pendingCount = pendingStudents.length;
+  const completedCount = completedStudents.length;
+
+  const filteredStudents = students.filter((s) => {
+    const matchesSearch =
       s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      s.pin.includes(searchTerm)
-  );
+      s.pin.includes(searchTerm);
+    if (!matchesSearch) return false;
+
+    const isGraded = isStudentGradedForWeek(s, selectedWeek);
+    if (scoresFilter === "pending") return !isGraded;
+    if (scoresFilter === "completed") return isGraded;
+    return true;
+  });
 
   const filteredRanking = fullRanking.filter(
     (s) =>
@@ -697,6 +780,59 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </button>
               </div>
             </div>
+
+            {/* Filtro de estado semanal: Pendientes vs Guardados vs Todos */}
+            <div className="pt-2.5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex bg-slate-100/90 p-1 rounded-xl border border-slate-200 text-xs font-semibold w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={() => setScoresFilter("pending")}
+                  className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg transition-all cursor-pointer ${
+                    scoresFilter === "pending"
+                      ? "bg-white text-purple-950 shadow-xs border border-purple-200 font-bold"
+                      : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                  <span>Pendientes ({pendingCount})</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setScoresFilter("completed")}
+                  className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg transition-all cursor-pointer ${
+                    scoresFilter === "completed"
+                      ? "bg-white text-emerald-950 shadow-xs border border-emerald-200 font-bold"
+                      : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Ya guardados ({completedCount})</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setScoresFilter("all")}
+                  className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg transition-all cursor-pointer ${
+                    scoresFilter === "all"
+                      ? "bg-white text-slate-900 shadow-xs border border-slate-200 font-bold"
+                      : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  <span>Todos ({students.length})</span>
+                </button>
+              </div>
+
+              <div className="text-[11px] text-slate-500 font-medium text-center sm:text-right">
+                {scoresFilter === "pending" ? (
+                  <span>Al guardar cada alumno, desaparecerá de esta lista.</span>
+                ) : scoresFilter === "completed" ? (
+                  <span className="text-emerald-700 font-semibold">Alumnos con notas registradas esta semana.</span>
+                ) : (
+                  <span>Mostrando todos los alumnos registrados.</span>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Confirmación al guardar */}
@@ -708,7 +844,49 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           )}
 
           {/* Selector de modo y contenido */}
-          {mobileScoresView === "cards" ? (
+          {filteredStudents.length === 0 ? (
+            <div className="text-center py-8 px-4 bg-white rounded-2xl border border-dashed border-slate-200 text-slate-700 space-y-2">
+              {scoresFilter === "pending" && pendingCount === 0 ? (
+                <>
+                  <div className="w-12 h-12 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl shadow-xs">
+                    🎉
+                  </div>
+                  <p className="font-black text-base sm:text-lg text-emerald-950">
+                    ¡Todos los alumnos tienen sus puntos guardados en esta semana!
+                  </p>
+                  <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                    Has completado la asignación de puntos para todos los alumnos de esta semana. Puedes revisarlos en la pestaña &quot;Ya guardados&quot; o publicar los resultados.
+                  </p>
+                  <div className="pt-2 flex items-center justify-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setScoresFilter("completed")}
+                      className="py-1.5 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200 transition-colors cursor-pointer"
+                    >
+                      Ver alumnos guardados ({completedCount})
+                    </button>
+                  </div>
+                </>
+              ) : scoresFilter === "completed" && completedCount === 0 ? (
+                <>
+                  <p className="text-xs text-slate-500">
+                    Aún no has guardado las notas de ningún alumno para la Semana {selectedWeek}.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setScoresFilter("pending")}
+                    className="py-1.5 px-3 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-900 text-xs font-bold border border-purple-200 transition-colors cursor-pointer"
+                  >
+                    Ver alumnos pendientes ({pendingCount})
+                  </button>
+                </>
+              ) : (
+                <p className="text-xs text-slate-500">
+                  No se encontraron alumnos que coincidan con la búsqueda.
+                </p>
+              )}
+            </div>
+          ) : mobileScoresView === "cards" ? (
             /* VISTA 1: TARJETAS TÁCTILES RÁPIDAS (Thumb-Friendly, Mobile First) */
             <div className="space-y-2.5">
               {filteredStudents.map((student) => {
@@ -718,6 +896,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 const sRitmo = Number(rowScores["ritmo"]) || 0;
                 const sNotas = Number(rowScores["notas"]) || 0;
                 const weekTotal = sObras + sTec + sRitmo + sNotas;
+                const isGraded = isStudentGradedForWeek(student, selectedWeek);
 
                 return (
                   <div
@@ -919,6 +1098,39 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         </div>
                       </div>
                     </div>
+
+                    {/* Botón de guardado individual de este alumno */}
+                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                      <div className="text-[11px] text-slate-500 font-medium">
+                        {isGraded ? (
+                          <span className="inline-flex items-center gap-1 text-emerald-700 font-bold text-[10px] bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                            Puntos guardados
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-amber-800 font-semibold text-[10px] bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                            <Clock className="w-3 h-3 text-amber-600" />
+                            Pendiente
+                          </span>
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleSaveSingleStudent(student.id, student.name)}
+                        disabled={savingStudentId === student.id}
+                        className="inline-flex items-center gap-1.5 py-1.5 px-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-xs shadow-xs active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+                      >
+                        {savingStudentId === student.id ? (
+                          <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <Save className="w-3.5 h-3.5" />
+                        )}
+                        <span>
+                          {isGraded ? "Actualizar alumno" : "Guardar alumno"}
+                        </span>
+                      </button>
+                    </div>
                   </div>
                 );
               })}
@@ -940,6 +1152,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         🎼 Claves (2)
                       </th>
                       <th className="py-2.5 px-3 text-center text-amber-700 font-bold">Total</th>
+                      <th className="py-2.5 px-3 text-center text-purple-800 font-bold">Acción</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -1033,6 +1246,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           </td>
                           <td className="py-2 px-3 text-center font-mono font-bold text-amber-700">
                             {weekTotal}
+                          </td>
+                          <td className="py-2 px-3 text-center">
+                            <button
+                              type="button"
+                              onClick={() => handleSaveSingleStudent(student.id, student.name)}
+                              disabled={savingStudentId === student.id}
+                              className="inline-flex items-center gap-1 py-1 px-2.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold text-[11px] shadow-2xs active:scale-95 cursor-pointer disabled:opacity-50 transition-all"
+                              title={`Guardar puntos de ${student.name}`}
+                            >
+                              {savingStudentId === student.id ? (
+                                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                              ) : (
+                                <Save className="w-3 h-3" />
+                              )}
+                              <span>
+                                {isStudentGradedForWeek(student, selectedWeek)
+                                  ? "Actualizar"
+                                  : "Guardar"}
+                              </span>
+                            </button>
                           </td>
                         </tr>
                       );

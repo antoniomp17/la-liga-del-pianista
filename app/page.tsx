@@ -194,6 +194,75 @@ function ContestAppContent() {
                   <p className="text-[11px] sm:text-xs text-slate-500 max-w-xl mx-auto px-2">
                     {studentData.contestSubtitle} · Semana {studentData.currentWeek} de {studentData.totalWeeks} ({currentWeekInfo?.dates || ""})
                   </p>
+
+                  {/* Tarjeta destacada: Identificación y Posición Inmediata del Alumno */}
+                  <div className="pt-2 flex justify-center">
+                    <div className="inline-flex items-center gap-2.5 sm:gap-3.5 px-3.5 sm:px-4 py-2 rounded-2xl bg-white border border-amber-200/90 shadow-xs text-slate-800 max-w-full">
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-amber-100 to-rose-100 border border-amber-200 flex items-center justify-center text-base sm:text-lg shrink-0 shadow-2xs">
+                        {studentData.currentStudent.avatar}
+                      </div>
+                      <div className="text-left min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-black text-xs sm:text-sm text-slate-800 truncate">
+                            {studentData.currentStudent.name}
+                          </span>
+                          <span
+                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-black text-[11px] sm:text-xs shadow-2xs border ${
+                              studentData.currentStudent.rank === 1
+                                ? "bg-amber-100 text-amber-900 border-amber-300"
+                                : studentData.currentStudent.rank === 2
+                                ? "bg-slate-100 text-slate-700 border-slate-300"
+                                : studentData.currentStudent.rank === 3
+                                ? "bg-orange-100 text-orange-800 border-orange-300"
+                                : "bg-sky-50 text-sky-900 border-sky-200"
+                            }`}
+                          >
+                            <span>
+                              {studentData.currentStudent.rank === 1
+                                ? "🥇"
+                                : studentData.currentStudent.rank === 2
+                                ? "🥈"
+                                : studentData.currentStudent.rank === 3
+                                ? "🥉"
+                                : "🏅"}
+                            </span>
+                            <span>
+                              {studentData.currentStudent.rank === 1
+                                ? "1ª Posición"
+                                : studentData.currentStudent.rank === 2
+                                ? "2ª Posición"
+                                : studentData.currentStudent.rank === 3
+                                ? "3ª Posición"
+                                : `Puesto #${studentData.currentStudent.rank}`}
+                            </span>
+                          </span>
+                        </div>
+                        <p className="text-[10px] sm:text-xs text-slate-500 font-medium mt-0.5 flex items-center gap-1.5 flex-wrap">
+                          <span>
+                            Puntuación:{" "}
+                            <strong className="text-slate-700 font-mono font-bold">
+                              {studentData.currentStudent.totalScore} pts
+                            </strong>
+                          </span>
+                          {studentData.currentStudent.rankChange > 0 && (
+                            <span className="inline-flex items-center gap-0.5 text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 text-[10px]">
+                              ▲ +{studentData.currentStudent.rankChange} esta semana
+                            </span>
+                          )}
+                          {studentData.currentStudent.rankChange < 0 && (
+                            <span className="inline-flex items-center gap-0.5 text-rose-700 font-bold bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200 text-[10px]">
+                              ▼ {studentData.currentStudent.rankChange} esta semana
+                            </span>
+                          )}
+                          {studentData.currentStudent.rankChange === 0 && (
+                            <span className="text-slate-400 text-[10px]">
+                              · Mantienes puesto
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Tarjeta Clave: ¿Cuántos puntos le quedan para la siguiente posición? */}
