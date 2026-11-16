@@ -16,16 +16,40 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { weekNumber, scores, setAsCurrentWeek } = body;
+    const { weekNumber, scores, setAsCurrentWeek, clearStudentId } = body;
 
-    if (!weekNumber || typeof scores !== "object") {
+    if (!weekNumber) {
       return NextResponse.json(
-        { error: "Datos de puntuación incompletos o inválidos." },
+        { error: "Número de semana no proporcionado." },
         { status: 400 }
       );
     }
 
     const week = Number(weekNumber);
+
+    // Si se solicita desmarcar/limpiar la semana de un alumno específico
+    if (clearStudentId) {
+      for (const student of state.students) {
+        if (student.id === clearStudentId && student.scoresByWeek) {
+          delete student.scoresByWeek[week];
+        }
+      }
+
+      await saveContestState(state);
+
+      return NextResponse.json({
+        success: true,
+        currentWeek: state.settings.currentWeek,
+        message: `Puntuaciones de la Semana ${week} eliminadas para el alumno.`,
+      });
+    }
+
+    if (typeof scores !== "object") {
+      return NextResponse.json(
+        { error: "Datos de puntuación incompletos o inválidos." },
+        { status: 400 }
+      );
+    }
 
     for (const student of state.students) {
       if (scores[student.id]) {
